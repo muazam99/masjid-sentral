@@ -58,7 +58,7 @@ export const masjid = pgTable("masjid", {
   addedByUserId: integer("added_by_user_id").references(() => users.id).default(1),
 });
 
-export const masjidView = pgView("masjid_list_vw", {
+export const masjidListView = pgView("masjid_list_vw", {
   id: integer("id"),
   name: varchar("name", { length: 255 }),
   imageUrl: varchar("image_url", { length: 255 }),

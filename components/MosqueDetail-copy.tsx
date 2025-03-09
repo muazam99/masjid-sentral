@@ -23,15 +23,11 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-4">
-              {/* {mosque.imageUrls.map((image, index) => (
+              {mosque.imageUrls.map((image, index) => (
                 <div key={index} className="aspect-video relative rounded-lg overflow-hidden">
                   <Image src={placeholderImg} alt={`Mosque image ${index + 1}`} fill className="object-cover" />
                 </div>
-              ))} */}
-           
-                <div className="aspect-video relative rounded-lg overflow-hidden">
-                  <Image src={mosque.thumbnailUrl || placeholderImg} alt={`Mosque image`} fill className="object-cover" />
-                </div>
+              ))}
             </div>
             <div className="text-center mb-8">
               <Button variant="outline">
@@ -68,11 +64,11 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
             <div className="mb-8">
               <h2 className="text-2xl font-bold mb-4">Social Media</h2>
               <div className="flex flex-col items-end space-y-4">
-                {/* {Object.entries(mosque.socialMedia).map(([platform, url]) => (
+                {Object.entries(mosque.socialMedia).map(([platform, url]) => (
                   <a key={platform} href={url} target="_blank" rel="noopener noreferrer">
                     <Image src={`/${platform}-icon.svg`} alt={`${platform} icon`} width={24} height={24} />
                   </a>
-                ))} */}
+                ))}
               </div>
             </div>
 
@@ -84,7 +80,7 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
               </div>
             </div>
 
-            {/* <div>
+            <div>
               <h2 className="text-2xl font-bold mb-4">TikTok Review</h2>
               <div className="border rounded-lg overflow-hidden dark:border-border">
                 <TikTokEmbed url={mosque.tiktokReview.videoUrl} width="100%" />
@@ -95,7 +91,7 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
                   </Button>
                 </div>
               </div>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>
