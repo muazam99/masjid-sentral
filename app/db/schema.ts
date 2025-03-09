@@ -63,6 +63,8 @@ export const masjidView = pgView("masjid_list_vw", {
   name: varchar("name", { length: 255 }),
   imageUrl: varchar("image_url", { length: 255 }),
   countryName: varchar("country_name", { length: 255 }),
+  stateId: integer("state_id"),
+  cityId: integer("city_id"),
   stateName: varchar("state_name", { length: 255 }),
   cityName: varchar("city_name", { length: 255 }),
 }).existing();

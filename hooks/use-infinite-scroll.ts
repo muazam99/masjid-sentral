@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 
 export function useInfiniteScroll<T>(
   initialItems: T[],
@@ -35,6 +35,25 @@ export function useInfiniteScroll<T>(
     }
   }
 
+  const refresh = useCallback(async () => {
+    setItems([])
+    setPage(1)
+    setHasMore(true)
+    setLoading(true)
+    try {
+      const newItems = await fetchMoreItems(1)
+      const itemsArray = Array.isArray(newItems) ? newItems : [];
+      setItems(itemsArray)
+      setHasMore(itemsArray.length > 0)
+      setPage(2)
+    } catch (error) {
+      console.error("Error refreshing items:", error)
+      setHasMore(false)
+    } finally {
+      setLoading(false)
+    }
+  }, [fetchMoreItems])
+
   useEffect(() => {
     if (!loadMoreRef.current) return
 
@@ -56,6 +75,6 @@ export function useInfiniteScroll<T>(
     }
   }, [loadMoreRef.current, loading, hasMore, page])
 
-  return { items, loading, hasMore, loadMoreRef }
+  return { items, loading, hasMore, loadMoreRef, refresh }
 }
 

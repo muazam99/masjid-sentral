@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useState, useEffect } from 'react'
-
+import { useMosqueFilter } from '@/store/use-mosque-filter'
 
 type DistrictProps = {
   id: number 
@@ -18,12 +18,10 @@ type DistrictProps = {
   label: string
 }
 
-
 export default function SearchFilter() {
   const [states, setStates] = useState<DistrictProps[]>([])
   const [cities, setCities] = useState<DistrictProps[]>([])
-  const [selectedState, setSelectedState] = useState<string>('')
-  const [selectedCity, setSelectedCity] = useState<string>('')
+  const { stateId, cityId, setStateId, setCityId, resetFilters, triggerSearch } = useMosqueFilter()
 
   // Fetch states on component mount
   useEffect(() => {
@@ -42,9 +40,9 @@ export default function SearchFilter() {
   // Fetch cities when state is selected
   useEffect(() => {
     const fetchCities = async () => {
-      if (selectedState) {
+      if (stateId) {
         try {
-          const response = await fetch(`/api/cities?stateId=${selectedState}`)
+          const response = await fetch(`/api/cities?stateId=${stateId}`)
           const data = await response.json()
           setCities(data)
         } catch (error) {
@@ -56,20 +54,15 @@ export default function SearchFilter() {
       }
     }
     fetchCities()
-  }, [selectedState])
-
-  const resetFilters = () => {
-    setSelectedState('')
-    setSelectedCity('')
-  };
+  }, [stateId])
 
   return (
     <div className="mb-8 p-4 bg-background rounded-lg border-[1px]">
       <div className="grid gap-4 md:grid-cols-4">
         <Input placeholder="Cari Masjid..." className="md:col-span-2" />
         <Select 
-        value={selectedState} 
-        onValueChange={setSelectedState}>
+          value={stateId || ''} 
+          onValueChange={setStateId}>
           <SelectTrigger>
             <SelectValue placeholder="Negeri" />
           </SelectTrigger>
@@ -82,9 +75,9 @@ export default function SearchFilter() {
           </SelectContent>
         </Select>
         <Select 
-          value={selectedCity}
-          onValueChange={setSelectedCity} 
-          disabled={!selectedState || cities.length === 0}>
+          value={cityId || ''}
+          onValueChange={setCityId}
+          disabled={!stateId || cities.length === 0}>
           <SelectTrigger>
             <SelectValue placeholder="Bandar" />
           </SelectTrigger>
@@ -99,7 +92,7 @@ export default function SearchFilter() {
       </div>
       <div className="mt-4 flex justify-end space-x-2">
         <Button onClick={resetFilters} variant="outline">Reset</Button>
-        <Button>Search</Button>
+        <Button onClick={triggerSearch}>Search</Button>
       </div>
     </div>
   )
