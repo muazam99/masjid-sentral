@@ -1,5 +1,4 @@
 'use client';
-import { useEffect, useState } from "react"
 import MosqueCard from "./MosqueCard"
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
 import { Loader2 } from "lucide-react"

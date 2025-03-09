@@ -10,7 +10,7 @@ import {
 
 export default function SearchFilter() {
   return (
-    <div className="mb-8 p-4 bg-secondary rounded-lg">
+    <div className="mb-8 p-4 bg-background rounded-lg border-[1px]">
       <div className="grid gap-4 md:grid-cols-4">
         <Input placeholder="Cari Masjid..." className="md:col-span-2" />
         <Select>
