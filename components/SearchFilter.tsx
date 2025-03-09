@@ -1,3 +1,4 @@
+'use client'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -7,44 +8,97 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useState, useEffect } from 'react'
+
+
+type DistrictProps = {
+  id: number 
+  parentId: number | null
+  value: string
+  label: string
+}
+
 
 export default function SearchFilter() {
+  const [states, setStates] = useState<DistrictProps[]>([])
+  const [cities, setCities] = useState<DistrictProps[]>([])
+  const [selectedState, setSelectedState] = useState<string>('')
+  const [selectedCity, setSelectedCity] = useState<string>('')
+
+  // Fetch states on component mount
+  useEffect(() => {
+    const fetchStates = async () => {
+      try {
+        const response = await fetch('/api/states')
+        const data = await response.json()
+        setStates(data)
+      } catch (error) {
+        console.error('Failed to fetch states:', error)
+      }
+    }
+    fetchStates()
+  }, [])
+
+  // Fetch cities when state is selected
+  useEffect(() => {
+    const fetchCities = async () => {
+      if (selectedState) {
+        try {
+          const response = await fetch(`/api/cities?stateId=${selectedState}`)
+          const data = await response.json()
+          setCities(data)
+        } catch (error) {
+          console.error('Failed to fetch cities:', error)
+          setCities([])
+        }
+      } else {
+        setCities([])
+      }
+    }
+    fetchCities()
+  }, [selectedState])
+
+  const resetFilters = () => {
+    setSelectedState('')
+    setSelectedCity('')
+  };
+
   return (
     <div className="mb-8 p-4 bg-background rounded-lg border-[1px]">
       <div className="grid gap-4 md:grid-cols-4">
         <Input placeholder="Cari Masjid..." className="md:col-span-2" />
-        <Select>
+        <Select 
+        value={selectedState} 
+        onValueChange={setSelectedState}>
           <SelectTrigger>
             <SelectValue placeholder="Negeri" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="selangor">Selangor</SelectItem>
-            <SelectItem value="kuala-lumpur">Kuala Lumpur</SelectItem>
-            {/* Add more states as needed */}
+            {states.map((state) => (
+              <SelectItem key={state.id} value={state.id.toString()}>
+                {state.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
-        <Select>
+        <Select 
+          value={selectedCity}
+          onValueChange={setSelectedCity} 
+          disabled={!selectedState || cities.length === 0}>
           <SelectTrigger>
             <SelectValue placeholder="Bandar" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="shah-alam">Shah Alam</SelectItem>
-            <SelectItem value="petaling-jaya">Petaling Jaya</SelectItem>
-            {/* Add more cities as needed */}
+            {cities.map((city) => (
+              <SelectItem key={city.id} value={city.id.toString()}>
+                {city.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
-        {/* <Select>
-          <SelectTrigger>
-            <SelectValue placeholder="Tags" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="historic">Historic</SelectItem>
-            <SelectItem value="modern">Modern</SelectItem>
-          </SelectContent>
-        </Select> */}
       </div>
       <div className="mt-4 flex justify-end space-x-2">
-        <Button variant="outline">Reset</Button>
+        <Button onClick={resetFilters} variant="outline">Reset</Button>
         <Button>Search</Button>
       </div>
     </div>
