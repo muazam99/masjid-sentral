@@ -73,6 +73,11 @@ export default function SearchFilter() {
           className="md:col-span-2"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              triggerSearch()
+            }
+          }}
         />
         <Select 
           value={stateId || ''} 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/app/db";
 import { masjidView } from "@/app/db/schema";
-import { and, eq, ilike, like } from "drizzle-orm";
+import { and, eq, ilike } from "drizzle-orm";
 
 export async function GET( request: NextRequest ) {
     const { searchParams } = new URL(request.url);

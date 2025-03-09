@@ -16,12 +16,12 @@ export default function Header() {
             <Link href="/about" className="transition-colors hover:text-foreground/80 text-foreground/60">
               Tentang Kami
             </Link>
-            <Link href="/map" className="transition-colors hover:text-foreground/80 text-foreground/60">
+            {/* <Link href="/map" className="transition-colors hover:text-foreground/80 text-foreground/60">
               Peta Masjid
             </Link>
             <Link href="/add" className="transition-colors hover:text-foreground/80 text-foreground/60">
               Tambah Masjid
-            </Link>
+            </Link> */}
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
