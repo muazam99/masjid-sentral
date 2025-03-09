@@ -21,7 +21,16 @@ type DistrictProps = {
 export default function SearchFilter() {
   const [states, setStates] = useState<DistrictProps[]>([])
   const [cities, setCities] = useState<DistrictProps[]>([])
-  const { stateId, cityId, setStateId, setCityId, resetFilters, triggerSearch } = useMosqueFilter()
+  const { 
+    stateId, 
+    cityId, 
+    searchText,
+    setStateId, 
+    setCityId, 
+    setSearchText,
+    resetFilters, 
+    triggerSearch 
+  } = useMosqueFilter()
 
   // Fetch states on component mount
   useEffect(() => {
@@ -59,7 +68,12 @@ export default function SearchFilter() {
   return (
     <div className="mb-8 p-4 bg-background rounded-lg border-[1px]">
       <div className="grid gap-4 md:grid-cols-4">
-        <Input placeholder="Cari Masjid..." className="md:col-span-2" />
+        <Input 
+          placeholder="Cari Masjid..." 
+          className="md:col-span-2"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
         <Select 
           value={stateId || ''} 
           onValueChange={setStateId}>

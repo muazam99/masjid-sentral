@@ -7,7 +7,7 @@ import { useCallback, useEffect } from 'react'
 import { useMosqueFilter } from '@/store/use-mosque-filter'
 
 const MosqueGrid = () => {
-  const { stateId, cityId, searchTrigger } = useMosqueFilter()
+  const { stateId, cityId, searchText, searchTrigger } = useMosqueFilter()
 
   const fetchMosques = useCallback(async (page: number): Promise<MosqueView[]> => {
     try {
@@ -17,6 +17,7 @@ const MosqueGrid = () => {
 
       if (stateId) params.set('stateId', stateId)
       if (cityId) params.set('cityId', cityId)
+      if (searchText) params.set('q', searchText)
 
       const response = await fetch(`/api/mosque?${params.toString()}`);
       const data = await response.json();
@@ -26,7 +27,7 @@ const MosqueGrid = () => {
       console.error("Error fetching mosques:", error);
       return [];
     }
-  }, [stateId, cityId])
+  }, [stateId, cityId, searchText])
 
   const { 
     items: mosques, 
