@@ -1,14 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import {  Phone, Mail, Camera } from 'lucide-react'
+import { Phone, Camera } from 'lucide-react'
 // import { TikTokEmbed } from 'react-social-media-embed'
 import placeholderImg from '../public/placeholder.svg'
 import { Mosque } from '@/types/Mosque'
 
 
 export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
+  console.log(mosque)
   return (
     <div className="bg-background text-foreground">
       <div className="container mx-auto px-4 py-8">
@@ -23,14 +23,19 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-4">
-              {/* {mosque.imageUrls.map((image, index) => (
+              {mosque.image_urls?.map((image, index) => (
                 <div key={index} className="aspect-video relative rounded-lg overflow-hidden">
-                  <Image src={placeholderImg} alt={`Mosque image ${index + 1}`} fill className="object-cover" />
+                  <Image src={image} alt={`Mosque image ${index + 1}`} fill className="object-cover" />
                 </div>
-              ))} */}
+              ))}
            
                 <div className="aspect-video relative rounded-lg overflow-hidden">
-                  <Image src={mosque.thumbnailUrl || placeholderImg} alt={`Mosque image`} fill className="object-cover" />
+                  <Image 
+                    src={mosque.thumbnailUrl || placeholderImg} 
+                    alt={`Mosque image`}
+                    fill
+                    className="object-cover" 
+                  />
                 </div>
             </div>
             <div className="text-center mb-8">

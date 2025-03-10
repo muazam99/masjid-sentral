@@ -13,8 +13,6 @@ export async function GET( request: NextRequest ) {
     const cityId = searchParams.get("cityId");
     const name = searchParams.get("q");
 
-    console.log(name);
-
     const filters = [];
     if (stateId) {
         filters.push(eq(masjidListView.stateId, parseInt(stateId)));

@@ -6,32 +6,7 @@ import { and, eq } from "drizzle-orm";
 
 export const getMasjidById = cache( async (id: number) => {
 
-    const data = await db.select({
-        id: masjid.id,
-        name: masjid.name,
-        thumbnailUrl: masjid.thumbnailUrl,
-        description: masjid.description,
-        qrImageUrl: masjid.qrImageUrl,
-        qrContent: masjid.qrContent,
-        googleMapsEmbedded: masjid.googleMapsEmbedded,
-        googleMapsUrl: masjid.googleMapsUrl,
-        latitude: masjid.latitude,
-        longitude: masjid.longitude,
-        address: masjid.address,
-        countryId: masjid.countryId,
-        stateId: masjid.stateId,
-        cityId: masjid.cityId,
-        tiktokUrl: masjid.tiktokUrl,
-        facebookUrl: masjid.facebookUrl,
-        whatsappNo: masjid.whatsappNo,
-        contactNo: masjid.contactNo,
-        faxNo: masjid.faxNo,
-        category: masjid.category,
-        status: masjid.status,
-        createdAt: masjid.createdAt,
-        updatedAt: masjid.updatedAt,
-        addedByUserId: masjid.addedByUserId
-    })
+    const data = await db.select()
     .from(masjid)
     .where(
         and(

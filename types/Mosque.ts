@@ -11,9 +11,11 @@ export type Mosque = {
     id: number | null;
     name: string | null;
     thumbnailUrl: string | null;
+    image_urls: string[] | null;
     description: string | null;
     qrImageUrl: string | null;
     qrContent: string | null;
+    supported_payments: string[] | null;
     googleMapsEmbedded: string | null;
     googleMapsUrl: string | null;
     latitude: string | null;
