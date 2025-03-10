@@ -13,9 +13,9 @@ export default function Header() {
             </span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
-            <Link href="/about" className="transition-colors hover:text-foreground/80 text-foreground/60">
+            {/* <Link href="/about" className="transition-colors hover:text-foreground/80 text-foreground/60">
               Tentang Kami
-            </Link>
+            </Link> */}
             {/* <Link href="/map" className="transition-colors hover:text-foreground/80 text-foreground/60">
               Peta Masjid
             </Link>

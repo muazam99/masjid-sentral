@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Phone, Camera } from 'lucide-react'
+import { Phone, Camera, ArrowLeft } from 'lucide-react'
 // import { TikTokEmbed } from 'react-social-media-embed'
 import placeholderImg from '../public/placeholder.svg'
 import { Mosque } from '@/types/Mosque'
@@ -11,7 +11,15 @@ import QrCodeDisplay from './qrCodeDisplay'
 export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
   return (
     <div className="bg-background text-foreground">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4">
+        <div className="mb-4">
+          <Link href="/">
+            <Button variant="outline">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Kembali
+            </Button>
+          </Link>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <h1 className="text-3xl font-bold  mb-2">{mosque.name}</h1>
