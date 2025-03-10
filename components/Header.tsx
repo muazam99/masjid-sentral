@@ -30,8 +30,8 @@ export default function Header() {
           </div>
           <nav className="flex items-center space-x-2">
             <ThemeToggle />
-            <Button variant="ghost" className="text-primary">Log Masuk</Button>
-            <Button className="bg-primary text-primary-foreground">Daftar</Button>
+            {/* <Button variant="ghost" className="text-primary">Log Masuk</Button>
+            <Button className="bg-primary text-primary-foreground">Daftar</Button> */}
           </nav>
         </div>
       </div>
