@@ -66,7 +66,7 @@ export const getCities = cache( async (stateId: number) => {
             eq(districts.status, 'active')
         ));
   
-    return data[0];
+    return data;
 });
 
 export const getCityById = cache( async (id: number) => {
