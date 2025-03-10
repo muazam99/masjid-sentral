@@ -37,7 +37,7 @@ export const masjid = pgTable("masjid", {
   description: text("description"),
   qrImageUrl: varchar("qr_image_url", { length: 255 }),
   qrContent: varchar("qr_content", { length: 255 }),
-  supported_payments: jsonb().$type<string[]>(),
+  supportedPayments: text("supported_payments"),
   googleMapsEmbedded: varchar("google_maps_embedded", { length: 255 }),
   googleMapsUrl: varchar("google_maps_url", { length: 255 }),
   latitude: varchar("latitude", { length: 50 }),

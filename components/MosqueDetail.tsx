@@ -5,43 +5,47 @@ import { Phone, Camera } from 'lucide-react'
 // import { TikTokEmbed } from 'react-social-media-embed'
 import placeholderImg from '../public/placeholder.svg'
 import { Mosque } from '@/types/Mosque'
+import QrCodeDisplay from './qrCodeDisplay'
 
 
 export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
-  console.log(mosque)
   return (
     <div className="bg-background text-foreground">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <h1 className="text-3xl font-bold  mb-2">{mosque.name}</h1>
-            <p className="text-muted-foreground  mb-2">{mosque.state?.label}, {mosque.city?.label}</p>
-            <div className="mb-4">
-              <Link href={mosque.googleMapsUrl || ''} className="text-primary underline" target='_blank'>
+
+            <div className="relative">
+              <div className="grid grid-cols-3 gap-4 mb-4">
+                <div className="row-span-2 relative rounded-lg overflow-hidden h-[400px]">
+                  <Image 
+                  src={mosque.thumbnailUrl || placeholderImg} 
+                  alt="Mosque main image" 
+                  fill
+                  objectFit="cover" 
+                  className="absolute" />
+                </div>
+
+                {[...Array(4)].map((_, index) => (
+                  <div key={index} className="relative rounded-lg overflow-hidden h-[190px]">
+                    <Image src={mosque.image_urls || placeholderImg} alt={`Mosque image ${index + 2}`} fill className="object-cover" />
+                  </div>
+                ))}
+              </div>
+              {mosque.image_urls && mosque.image_urls.length > 4 && (
+                <div className="absolute bottom-0 right-0 m-4">
+                  <Button variant="outline">
+                    <Camera className="mr-2 h-4 w-4" /> View All Photos
+                  </Button>
+                </div>
+              )}
+            </div>
+            <p className="text-xl font-semibold  mb-2">{mosque.city?.label}, {mosque.state?.label}</p>
+            <div className="mb-16">
+              <Link href={mosque.googleMapsUrl || ''} className="text-[#14532D] underline" target='_blank'>
                 Cari di Google Maps
               </Link>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              {mosque.image_urls?.map((image, index) => (
-                <div key={index} className="aspect-video relative rounded-lg overflow-hidden">
-                  <Image src={image} alt={`Mosque image ${index + 1}`} fill className="object-cover" />
-                </div>
-              ))}
-           
-                <div className="aspect-video relative rounded-lg overflow-hidden">
-                  <Image 
-                    src={mosque.thumbnailUrl || placeholderImg} 
-                    alt={`Mosque image`}
-                    fill
-                    className="object-cover" 
-                  />
-                </div>
-            </div>
-            <div className="text-center mb-8">
-              <Button variant="outline">
-                <Camera className="mr-2 h-4 w-4" /> View All Photos
-              </Button>
             </div>
 
             <div className="mb-8">
@@ -69,23 +73,37 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
             </div>
           </div>
 
-          <div className="lg:col-span-1">
-            <div className="mb-8">
+          <div className="lg:col-span-1 mt-10">
+            {/* <div className="mb-8">
               <h2 className="text-2xl font-bold mb-4">Social Media</h2>
               <div className="flex flex-col items-end space-y-4">
-                {/* {Object.entries(mosque.socialMedia).map(([platform, url]) => (
+                {Object.entries(mosque.socialMedia).map(([platform, url]) => (
                   <a key={platform} href={url} target="_blank" rel="noopener noreferrer">
                     <Image src={`/${platform}-icon.svg`} alt={`${platform} icon`} width={24} height={24} />
                   </a>
-                ))} */}
+                ))}
               </div>
-            </div>
+            </div> */}
 
             <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">Derma</h2>
-              <p className="mb-4">Support our mosque by making a donation.</p>
-              <div className="border-2 border-pink-500 p-4 rounded-lg">
-                <Image src={placeholderImg} alt="Donation QR Code" width={200} height={200} className="mx-auto" />
+              <h2 className="text-2xl font-bold mb-2">Derma</h2>
+              <p className="text-muted-foreground mb-4">Salurkan sumbangan kepada masjid ini melalui  QR akaun masjid yang tertera.</p>
+              <div className="border-[1.75px] bg-white p-4 rounded-lg flex justify-center items-center cursor-pointer">
+                { mosque.qrContent ? (
+                  <QrCodeDisplay 
+                    qrContent={mosque.qrContent}
+                    supportedPayments={mosque.supportedPayments}
+                    name='Donation QR Code'
+                    size={200}
+                  />
+                ) : (
+                <Image 
+                  src={placeholderImg} 
+                  alt="Donation QR Code" 
+                  width={250} height={200} 
+                  className="mx-auto" 
+                  />
+                )}
               </div>
             </div>
 

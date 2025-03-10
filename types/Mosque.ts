@@ -15,7 +15,7 @@ export type Mosque = {
     description: string | null;
     qrImageUrl: string | null;
     qrContent: string | null;
-    supported_payments: string[] | null;
+    supportedPayments: string | null;
     googleMapsEmbedded: string | null;
     googleMapsUrl: string | null;
     latitude: string | null;
