@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import db from "@/app/db";
 import { masjidListView } from "@/app/db/schema";
 import { and, eq, ilike } from "drizzle-orm";
-import { getMasjidById } from "@/app/db/queries";
 
 export async function GET( request: NextRequest ) {
     const { searchParams } = new URL(request.url);
@@ -32,15 +31,3 @@ export async function GET( request: NextRequest ) {
     return NextResponse.json({ page, limit, data });
 }
 
-export async function GET_BY_ID(request: NextRequest) {
-    const { searchParams } = new URL(request.url);
-    const masjidId = searchParams.get("id");
-
-    if (!masjidId) {
-        return NextResponse.json({ error: "Masjid ID is required" }, { status: 400 });
-    }
-
-    const data = await getMasjidById(parseInt(masjidId));
-
-    return NextResponse.json(data);
-}

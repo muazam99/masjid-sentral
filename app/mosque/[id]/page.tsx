@@ -4,7 +4,7 @@ import MosqueDetail from '@/components/MosqueDetail'
 
 export default async function MosqueDetailPage({ params }: { params: { id: string } }) {
   const mosqueDetails = await getMasjidById(parseInt(params.id));
-
+  
   return (
     <Layout>
       <MosqueDetail mosque={mosqueDetails} />
