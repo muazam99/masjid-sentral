@@ -25,21 +25,24 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
             <h1 className="text-3xl font-bold  mb-2">{mosque.name}</h1>
 
             <div className="relative">
-              <div className="grid grid-cols-3 gap-4 mb-4">
+              <div className="lg:grid lg:grid-cols-3 gap-4 mb-4">
                 <div className="row-span-2 relative rounded-lg overflow-hidden h-[400px]">
                   <Image 
-                  src={mosque.thumbnailUrl || placeholderImg} 
-                  alt="Mosque main image" 
-                  fill
-                  objectFit="cover" 
-                  className="absolute" />
+                    src={mosque.thumbnailUrl || placeholderImg} 
+                    alt="Mosque main image" 
+                    fill
+                    objectFit="cover" 
+                    className="absolute" 
+                  />
                 </div>
-
-                {[...Array(4)].map((_, index) => (
-                  <div key={index} className="relative rounded-lg overflow-hidden h-[190px]">
-                    <Image src={mosque.image_urls || placeholderImg} alt={`Mosque image ${index + 2}`} fill className="object-cover" />
-                  </div>
-                ))}
+                
+                <div className="hidden lg:grid lg:col-span-2 lg:grid-cols-2 lg:gap-4">
+                  {[...Array(4)].map((_, index) => (
+                    <div key={index} className="relative rounded-lg overflow-hidden h-[190px]">
+                      <Image src={mosque.image_urls || placeholderImg} alt={`Mosque image ${index + 2}`} fill className="object-cover" />
+                    </div>
+                  ))}
+                </div>
               </div>
               {mosque.image_urls && mosque.image_urls.length > 4 && (
                 <div className="absolute bottom-0 right-0 m-4">
