@@ -1,10 +1,10 @@
 'use client';
 import MosqueCard from "./MosqueCard"
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
-import { Loader2 } from "lucide-react"
 import { MosqueView } from '@/types/Mosque';
 import { useCallback, useEffect } from 'react'
 import { useMosqueFilter } from '@/store/use-mosque-filter'
+import Loading from "@/app/(main)/loading";
 
 const MosqueGrid = () => {
   const { stateId, cityId, searchText, searchTrigger } = useMosqueFilter()
@@ -44,9 +44,7 @@ const MosqueGrid = () => {
 
   if (loading && mosques.length === 0) {
     return (
-      <div className="flex justify-center items-center min-h-[300px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
+      <Loading />
     )
   }
 
@@ -67,10 +65,7 @@ const MosqueGrid = () => {
 
       <div ref={loadMoreRef} className="flex justify-center py-8">
         {loading && (
-          <div className="flex items-center gap-2">
-            <Loader2 className="h-5 w-5 animate-spin text-primary" />
-            <span>Loading more mosques...</span>
-          </div>
+          <Loading />
         )}
         {!hasMore && mosques.length > 0 && <p className="text-muted-foreground">No more mosques to load</p>}
       </div>

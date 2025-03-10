@@ -5,7 +5,7 @@ import { ThemeToggle } from './ThemeToggle'
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-10">
-      <div className="container flex h-14 items-center">
+      <div className="container flex h-14 items-center justify-between">
         <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <span className="hidden font-bold sm:inline-block text-primary">
@@ -25,8 +25,14 @@ export default function Header() {
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+
+        { /* Mobile Title */}
           <div className="w-full flex-1 md:w-auto md:flex-none">
-            {/* Add mobile menu button here if needed */}
+            <Link href="/" className="flex md:hidden items-center justify-center w-full">
+              <span className="font-bold text-primary">
+                MASJID SENTRAL
+              </span>
+            </Link>
           </div>
           <nav className="flex items-center space-x-2">
             <ThemeToggle />
