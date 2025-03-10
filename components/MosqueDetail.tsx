@@ -88,14 +88,26 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
             <div className="mb-8">
               <h2 className="text-2xl font-bold mb-2">Derma</h2>
               <p className="text-muted-foreground mb-4">Salurkan sumbangan kepada masjid ini melalui  QR akaun masjid yang tertera.</p>
-              <div className="border-[1.75px] bg-white p-4 rounded-lg flex justify-center items-center cursor-pointer">
+              <div className="border-[1.75px] bg-background p-4 rounded-lg flex justify-center items-center cursor-pointer">
                 { mosque.qrContent ? (
-                  <QrCodeDisplay 
-                    qrContent={mosque.qrContent}
-                    supportedPayments={mosque.supportedPayments}
-                    name='Donation QR Code'
-                    size={200}
-                  />
+                  <div className="flex flex-col items-center gap-2">
+                    <QrCodeDisplay 
+                      qrContent={mosque.qrContent}
+                      supportedPayments={mosque.supportedPayments}
+                      name='Donation QR Code'
+                      size={200}
+                    />
+                    <p className="text-[8px] sm:text-xs text-zinc-400 text-center">
+                      Powered by:{" "}
+                      <a
+                        href="https://sedekah.je"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        SedekahJe
+                      </a>
+                    </p>
+                  </div>
                 ) : (
                 <Image 
                   src={placeholderImg} 
