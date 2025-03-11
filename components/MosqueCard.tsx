@@ -15,13 +15,13 @@ import placeholderImg from '../public/placeholder.svg'
 export default function MosqueCard({ id, name, cityName, stateName, imageUrl }: MosqueCardProps) {
   return (
     <Link href={`/mosque/${id}`}>
-      <Card className="h-full overflow-hidden transition-shadow hover:shadow-md dark:bg-card dark:text-card-foreground">
-        <div className="aspect-video relative">
+      <Card className="h-full overflow-hidden transition-shadow hover:shadow-lg dark:bg-card dark:text-card-foreground">
+        <div className="aspect-video relative overflow-hidden">
           <Image
             src={imageUrl || placeholderImg}
             alt={name}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-300 hover:scale-110"
           />
         </div>
         <CardContent className="p-4">
