@@ -10,6 +10,17 @@ const MosqueGrid = () => {
   const { stateId, cityId, searchText, searchTrigger } = useMosqueFilter()
 
   const fetchMosques = useCallback(async (page: number): Promise<MosqueView[]> => {
+    const cacheKey = `mosques_${stateId}_${cityId}_${searchText}_${page}`;
+    const cachedData = localStorage.getItem(cacheKey);
+    
+    if (cachedData) {
+      const { timestamp, data } = JSON.parse(cachedData);
+      // Check if cache is still valid (1 hour)
+      if (Date.now() - timestamp < 3600000) {
+        return data;
+      }
+    }
+
     try {
       const params = new URLSearchParams()
       params.set('page', page.toString())
@@ -22,6 +33,13 @@ const MosqueGrid = () => {
       const response = await fetch(`/api/mosque?${params.toString()}`);
       const data = await response.json();
       const items = Array.isArray(data.data) ? data.data : [];
+      
+      // Cache the data with timestamp
+      localStorage.setItem(cacheKey, JSON.stringify({
+        timestamp: Date.now(),
+        data: items
+      }));
+      
       return items;
     } catch (error) {
       console.error("Error fetching mosques:", error);
