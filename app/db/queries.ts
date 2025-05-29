@@ -1,5 +1,5 @@
 import { cache } from "react";
-import db from "./index";
+import { db } from "./index";
 import { districts, masjid } from "./schema";
 import { and, eq } from "drizzle-orm";
 
