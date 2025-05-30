@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import db from "@/app/db";
+import { db } from "@/app/db";
 import { masjidListView } from "@/app/db/schema";
 import { and, eq, ilike } from "drizzle-orm";
 
