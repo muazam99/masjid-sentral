@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__web-search-prime__webSearchPrime",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(wc:*)",
+      "mcp__ide__executeCode",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(find:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

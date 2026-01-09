@@ -5,7 +5,7 @@ import { Phone, Camera, ArrowLeft } from 'lucide-react'
 // import { TikTokEmbed } from 'react-social-media-embed'
 import placeholderImg from '../public/placeholder.svg'
 import { Mosque } from '@/types/Mosque'
-import QrCodeDisplay from './qrCodeDisplay'
+// import QrCodeDisplay from './qrCodeDisplay'  // Commented out as fields not in new schema
 
 
 export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
@@ -27,24 +27,24 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
             <div className="relative">
               <div className="lg:grid lg:grid-cols-3 gap-4 mb-4">
                 <div className="row-span-2 relative rounded-lg overflow-hidden h-[400px]">
-                  <Image 
-                    src={mosque.thumbnailUrl || placeholderImg} 
-                    alt="Mosque main image" 
+                  <Image
+                    src={mosque.thumbnailUrl || placeholderImg}
+                    alt="Mosque main image"
                     fill
-                    objectFit="cover" 
-                    className="absolute" 
+                    objectFit="cover"
+                    className="absolute"
                   />
                 </div>
-                
+
                 <div className="hidden lg:grid lg:col-span-2 lg:grid-cols-2 lg:gap-4">
-                  {[...Array(4)].map((_, index) => (
+                  {mosque.imageUrls?.slice(0, 4).map((url, index) => (
                     <div key={index} className="relative rounded-lg overflow-hidden h-[190px]">
-                      <Image src={mosque.image_urls || placeholderImg} alt={`Mosque image ${index + 2}`} fill className="object-cover" />
+                      <Image src={url || placeholderImg} alt={`Mosque image ${index + 2}`} fill className="object-cover" />
                     </div>
                   ))}
                 </div>
               </div>
-              {mosque.image_urls && mosque.image_urls.length > 4 && (
+              {mosque.imageUrls && mosque.imageUrls.length > 4 && (
                 <div className="absolute bottom-0 right-0 m-4">
                   <Button variant="outline">
                     <Camera className="mr-2 h-4 w-4" /> View All Photos
@@ -76,8 +76,8 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
               <div className="space-y-2">
                 <p>
                   <Phone className="inline-block mr-2" />
-                  <a href={`tel:${mosque.contactNo}`} className="text-primary">
-                    {mosque.contactNo}
+                  <a href={`tel:${mosque.phone}`} className="text-primary">
+                    {mosque.phone}
                   </a>
                 </p>
               </div>
@@ -96,13 +96,14 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
               </div>
             </div> */}
 
-            <div className="mb-8">
+            {/* Donation QR Code section - commented out as fields not in new schema */}
+            {/* <div className="mb-8">
               <h2 className="text-2xl font-bold mb-2">Derma</h2>
               <p className="text-muted-foreground mb-4">Salurkan sumbangan kepada masjid ini melalui  QR akaun masjid yang tertera.</p>
               <div className="border-[1.75px] bg-background p-4 rounded-lg flex justify-center items-center cursor-pointer">
                 { mosque.qrContent ? (
                   <div className="flex flex-col items-center gap-2">
-                    <QrCodeDisplay 
+                    <QrCodeDisplay
                       qrContent={mosque.qrContent}
                       supportedPayments={mosque.supportedPayments}
                       name='Donation QR Code'
@@ -120,15 +121,15 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
                     </p>
                   </div>
                 ) : (
-                <Image 
-                  src={placeholderImg} 
-                  alt="Donation QR Code" 
-                  width={250} height={200} 
-                  className="mx-auto" 
+                <Image
+                  src={placeholderImg}
+                  alt="Donation QR Code"
+                  width={250} height={200}
+                  className="mx-auto"
                   />
                 )}
               </div>
-            </div>
+            </div> */}
 
             {/* <div>
               <h2 className="text-2xl font-bold mb-4">TikTok Review</h2>

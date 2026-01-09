@@ -12,10 +12,10 @@ import { useState, useEffect } from 'react'
 import { useMosqueFilter } from '@/store/use-mosque-filter'
 
 type DistrictProps = {
-  id: number 
-  parentId: number | null
-  value: string
-  label: string
+  id: number
+  stateId: number | null  // Changed from parentId
+  name: string  // Changed from value/label to name
+  code: string | null
 }
 
 export default function SearchFilter() {
@@ -88,7 +88,7 @@ export default function SearchFilter() {
           <SelectContent>
             {states.map((state) => (
               <SelectItem key={state.id} value={state.id.toString()}>
-                {state.label}
+                {state.name}
               </SelectItem>
             ))}
           </SelectContent>
@@ -103,7 +103,7 @@ export default function SearchFilter() {
           <SelectContent>
             {cities.map((city) => (
               <SelectItem key={city.id} value={city.id.toString()}>
-                {city.label}
+                {city.name}
               </SelectItem>
             ))}
           </SelectContent>

@@ -1,10 +1,6 @@
-import { config } from 'dotenv';
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import { createClient } from '@supabase/supabase-js';
 
-config({ path: '.env' }); // or .env.local
+const supabaseUrl = process.env.SUPABASE_URL!;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY!;
 
-const client = postgres(process.env.DATABASE_URL!);
-const db = drizzle({ client });
-
- export default db;
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);

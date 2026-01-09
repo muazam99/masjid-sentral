@@ -32,6 +32,7 @@ const MosqueGrid = () => {
 
       const response = await fetch(`/api/mosque?${params.toString()}`);
       const data = await response.json();
+      console.log(data)
       const items = Array.isArray(data.data) ? data.data : [];
       
       // Cache the data with timestamp
@@ -58,7 +59,7 @@ const MosqueGrid = () => {
   // Only depend on searchTrigger
   useEffect(() => {
     refresh();
-  }, [searchTrigger]);
+  }, [refresh, searchTrigger]);
 
   if (loading && mosques.length === 0) {
     return (
@@ -70,13 +71,13 @@ const MosqueGrid = () => {
     <div className="space-y-8">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       {mosques.map((mosque) => (
-        <MosqueCard 
-          key={mosque.id}  
+        <MosqueCard
+          key={mosque.id}
           id={mosque.id || 0}
           name={mosque.name || ''}
           cityName={mosque.cityName || ''}
           stateName={mosque.stateName || ''}
-          imageUrl={mosque.imageUrl || ''}
+          imageUrl={mosque.imagePath || ''}
         />
       ))}
       </div>
