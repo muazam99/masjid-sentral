@@ -3,7 +3,7 @@ import MosqueCard from "./MosqueCard"
 import { getR2ImageUrl } from "@/utils/images"
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
 import { MosqueView } from '@/types/Mosque';
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useMosqueFilter } from '@/store/use-mosque-filter'
 import Loading from "@/app/(main)/loading";
 
@@ -33,7 +33,6 @@ const MosqueGrid = () => {
 
       const response = await fetch(`/api/mosque?${params.toString()}`);
       const data = await response.json();
-      console.log(data)
       const items = Array.isArray(data.data) ? data.data : [];
       
       // Cache the data with timestamp
@@ -49,18 +48,35 @@ const MosqueGrid = () => {
     }
   }, [stateId, cityId, searchText])
 
-  const { 
-    items: mosques, 
-    loading, 
-    hasMore, 
+  const {
+    items: mosques,
+    loading,
+    hasMore,
     loadMoreRef,
-    refresh 
+    refresh
   } = useInfiniteScroll<MosqueView>([], fetchMosques);
 
-  // Only depend on searchTrigger
+  // Track last searchTrigger to prevent duplicate refresh calls
+  const lastSearchTrigger = useRef<number>(0);
+
+  // Only depend on searchTrigger, not refresh
   useEffect(() => {
-    refresh();
-  }, [refresh, searchTrigger]);
+    // Only refresh if searchTrigger actually changed
+    if (searchTrigger !== lastSearchTrigger.current) {
+      lastSearchTrigger.current = searchTrigger;
+      refresh();
+    }
+  }, [searchTrigger, refresh]);
+
+  // Log when mosques change
+  useEffect(() => {
+    console.log('Mosques state updated:', mosques.length, 'items');
+    const ids = mosques.map(m => m.id);
+    const duplicateIds = ids.filter((id, index) => ids.indexOf(id) !== index);
+    if (duplicateIds.length > 0) {
+      console.warn('DUPLICATE IDs in mosques state:', duplicateIds);
+    }
+  }, [mosques]);
 
   if (loading && mosques.length === 0) {
     return (
@@ -73,7 +89,6 @@ const MosqueGrid = () => {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       {mosques.map((mosque) => {
         const imageUrl = getR2ImageUrl(mosque.image_path);
-        console.log('Mosque:', mosque.name, 'image_path:', mosque.image_path, 'fullUrl:', imageUrl);
         return (
           <MosqueCard
             key={mosque.id}

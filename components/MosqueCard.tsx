@@ -26,7 +26,7 @@ export default function MosqueCard({ id, name, cityName, stateName, imageUrl }: 
         </div>
         <CardContent className="p-4">
           <h3 className="font-bold text-lg line-clamp-2 min-h-[2rem]">{name}</h3>
-          <p className="text-sm text-muted-foreground line-clamp-1">{cityName}, {stateName}</p>
+          <p className="text-sm text-muted-foreground line-clamp-1">{cityName ? `${cityName}, ${stateName}` : stateName}</p>
         </CardContent>
       </Card>
     </Link>

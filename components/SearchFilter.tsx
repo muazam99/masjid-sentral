@@ -20,13 +20,10 @@ type DistrictProps = {
 
 export default function SearchFilter() {
   const [states, setStates] = useState<DistrictProps[]>([])
-  const [cities, setCities] = useState<DistrictProps[]>([])
   const { 
     stateId, 
-    cityId, 
     searchText,
     setStateId, 
-    setCityId, 
     setSearchText,
     resetFilters, 
     triggerSearch 
@@ -45,25 +42,6 @@ export default function SearchFilter() {
     }
     fetchStates()
   }, [])
-
-  // Fetch cities when state is selected
-  useEffect(() => {
-    const fetchCities = async () => {
-      if (stateId) {
-        try {
-          const response = await fetch(`/api/cities?stateId=${stateId}`)
-          const data = await response.json()
-          setCities(data)
-        } catch (error) {
-          console.error('Failed to fetch cities:', error)
-          setCities([])
-        }
-      } else {
-        setCities([])
-      }
-    }
-    fetchCities()
-  }, [stateId])
 
   return (
     <div className="mb-8 p-4 bg-background rounded-lg border-[1px]">
