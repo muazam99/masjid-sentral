@@ -1,5 +1,6 @@
 'use client';
 import MosqueCard from "./MosqueCard"
+import { getR2ImageUrl } from "@/utils/images"
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
 import { MosqueView } from '@/types/Mosque';
 import { useCallback, useEffect } from 'react'
@@ -70,16 +71,20 @@ const MosqueGrid = () => {
   return (
     <div className="space-y-8">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-      {mosques.map((mosque) => (
-        <MosqueCard
-          key={mosque.id}
-          id={mosque.id || 0}
-          name={mosque.name || ''}
-          cityName={mosque.cityName || ''}
-          stateName={mosque.stateName || ''}
-          imageUrl={mosque.imagePath || ''}
-        />
-      ))}
+      {mosques.map((mosque) => {
+        const imageUrl = getR2ImageUrl(mosque.image_path);
+        console.log('Mosque:', mosque.name, 'image_path:', mosque.image_path, 'fullUrl:', imageUrl);
+        return (
+          <MosqueCard
+            key={mosque.id}
+            id={mosque.id || 0}
+            name={mosque.name || ''}
+            cityName={mosque.city_name || ''}
+            stateName={mosque.state_name || ''}
+            imageUrl={imageUrl}
+          />
+        );
+      })}
       </div>
 
       <div ref={loadMoreRef} className="flex justify-center py-8">

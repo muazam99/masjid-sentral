@@ -1,12 +1,12 @@
 export type MosqueView = {
   id: number | null;
   name: string | null;
-  imagePath: string | null;  // Changed from imageUrl to match SQL view
-  countryName: string | null;
-  stateId: number | null;
-  cityId: number | null;
-  stateName: string | null;
-  cityName: string | null;
+  image_path: string | null;
+  country_name: string | null;
+  state_id: number | null;
+  city_id: number | null;
+  state_name: string | null;
+  city_name: string | null;
 };
 
 export type Mosque = {

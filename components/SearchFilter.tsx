@@ -67,7 +67,7 @@ export default function SearchFilter() {
 
   return (
     <div className="mb-8 p-4 bg-background rounded-lg border-[1px]">
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         <Input 
           placeholder="Cari Masjid..." 
           className="md:col-span-2"
@@ -93,7 +93,7 @@ export default function SearchFilter() {
             ))}
           </SelectContent>
         </Select>
-        <Select 
+        {/* <Select 
           value={cityId || ''}
           onValueChange={setCityId}
           disabled={!stateId || cities.length === 0}>
@@ -107,7 +107,7 @@ export default function SearchFilter() {
               </SelectItem>
             ))}
           </SelectContent>
-        </Select>
+        </Select> */}
       </div>
       <div className="mt-4 flex justify-end space-x-2">
         <Button onClick={resetFilters} variant="outline">Reset</Button>
