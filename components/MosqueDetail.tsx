@@ -5,7 +5,19 @@ import { Phone, Camera, ArrowLeft } from 'lucide-react'
 // import { TikTokEmbed } from 'react-social-media-embed'
 import placeholderImg from '../public/placeholder.svg'
 import { Mosque } from '@/types/Mosque'
+import { getR2ImageUrl } from '@/utils/images'
 // import QrCodeDisplay from './qrCodeDisplay'  // Commented out as fields not in new schema
+import dynamic from 'next/dynamic'
+
+// Dynamic import to avoid SSR issues with Leaflet
+const LeafletMap = dynamic(() => import('@/components/LeafletMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="aspect-video rounded-lg overflow-hidden border border-border bg-muted flex items-center justify-center">
+      <p className="text-muted-foreground">Loading map...</p>
+    </div>
+  ),
+})
 
 
 export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
@@ -28,7 +40,7 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
               <div className="lg:grid lg:grid-cols-3 gap-4 mb-4">
                 <div className="row-span-2 relative rounded-lg overflow-hidden h-[400px]">
                   <Image
-                    src={mosque.thumbnailUrl || placeholderImg}
+                    src={getR2ImageUrl(mosque.thumbnailUrl) || placeholderImg}
                     alt="Mosque main image"
                     fill
                     objectFit="cover"
@@ -39,7 +51,7 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
                 <div className="hidden lg:grid lg:col-span-2 lg:grid-cols-2 lg:gap-4">
                   {mosque.imageUrls?.slice(0, 4).map((url, index) => (
                     <div key={index} className="relative rounded-lg overflow-hidden h-[190px]">
-                      <Image src={url || placeholderImg} alt={`Mosque image ${index + 2}`} fill className="object-cover" />
+                      <Image src={getR2ImageUrl(url) || placeholderImg} alt={`Mosque image ${index + 2}`} fill className="object-cover" />
                     </div>
                   ))}
                 </div>
@@ -52,7 +64,7 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
                 </div>
               )}
             </div>
-            <p className="text-xl font-semibold  mb-2">{mosque.city?.label}, {mosque.state?.label}</p>
+            {/* <p className="text-xl font-semibold  mb-2">{mosque.city?.label}, {mosque.state?.label}</p> */}
             <div className="mb-16">
               <Link href={mosque.googleMapsUrl || ''} className="text-[#14532D] underline" target='_blank'>
                 Cari di Google Maps
@@ -61,14 +73,11 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
 
             <div className="mb-8">
               <h2 className="text-2xl font-bold mb-4">Lokasi Masjid</h2>
-              <div className="aspect-video relative rounded-lg overflow-hidden">
-                <iframe
-                  src={mosque.googleMapsEmbedded || ''}
-                  width="100%"
-                  height="80%"
-                  allowFullScreen
-                ></iframe>
-              </div>
+              <LeafletMap
+                latitude={mosque.latitude}
+                longitude={mosque.longitude}
+                googleMapsUrl={mosque.googleMapsUrl}
+              />
             </div>
 
             <div>
