@@ -35,6 +35,7 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <h1 className="text-3xl font-bold  mb-2">{mosque.name}</h1>
+            <p className="text-muted-foreground mb-4">{mosque.address}</p>
 
             <div className="relative">
               <div className="lg:grid lg:grid-cols-3 gap-4 mb-4">
