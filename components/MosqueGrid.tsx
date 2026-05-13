@@ -17,9 +17,11 @@ const MosqueGrid = () => {
     if (cachedData) {
       const { timestamp, data } = JSON.parse(cachedData);
       // Check if cache is still valid (1 hour)
-      if (Date.now() - timestamp < 3600000) {
+      if (Date.now() - timestamp < 3600000 && Array.isArray(data) && data.length > 0) {
         return data;
       }
+
+      localStorage.removeItem(cacheKey);
     }
 
     try {
@@ -33,13 +35,20 @@ const MosqueGrid = () => {
 
       const response = await fetch(`/api/mosque?${params.toString()}`);
       const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to fetch mosques");
+      }
+
       const items = Array.isArray(data.data) ? data.data : [];
       
-      // Cache the data with timestamp
-      localStorage.setItem(cacheKey, JSON.stringify({
-        timestamp: Date.now(),
-        data: items
-      }));
+      // Cache successful non-empty pages only so a transient API issue does not hide data.
+      if (items.length > 0) {
+        localStorage.setItem(cacheKey, JSON.stringify({
+          timestamp: Date.now(),
+          data: items
+        }));
+      }
       
       return items;
     } catch (error) {
@@ -57,7 +66,7 @@ const MosqueGrid = () => {
   } = useInfiniteScroll<MosqueView>([], fetchMosques);
 
   // Track last searchTrigger to prevent duplicate refresh calls
-  const lastSearchTrigger = useRef<number>(0);
+  const lastSearchTrigger = useRef<number | null>(null);
 
   // Only depend on searchTrigger, not refresh
   useEffect(() => {

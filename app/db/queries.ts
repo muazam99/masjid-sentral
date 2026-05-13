@@ -41,7 +41,7 @@ export const getMasjidById = cache(async (id: number) => {
 });
 
 export const getStates = cache(async () => {
-  const { data } = await supabase.from('states').select('*');
+  const { data } = await supabase.from('states').select('*').eq('country_id', 1);
   return data || [];
 });
 

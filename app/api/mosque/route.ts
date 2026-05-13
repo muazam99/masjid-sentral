@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     query = query.eq('state_id', parseInt(stateId));
   }
   if (cityId) {
-    query = query.eq('district_id', parseInt(cityId));
+    query = query.eq('city_id', parseInt(cityId));
   }
   if (name) {
     query = query.ilike('name', `%${name}%`);

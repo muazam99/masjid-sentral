@@ -19,6 +19,13 @@ const nextConfig = {
         pathname: '/**',
         search: '',
       },
+      {
+        protocol: 'https',
+        hostname: process.env.NEXT_PUBLIC_CLOUDFLARE_R2_URL?.replace('https://', '').replace('http://', ''),
+        port: '',
+        pathname: '/**',
+        search: '',
+      },
     ],
   },
 };
