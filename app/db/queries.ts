@@ -40,8 +40,13 @@ export const getMasjidById = cache(async (id: number) => {
   };
 });
 
-export const getStates = cache(async () => {
-  const { data } = await supabase.from('states').select('*').eq('country_id', 1);
+export const getCountries = cache(async () => {
+  const { data } = await supabase.from('countries').select('*').order('name');
+  return data || [];
+});
+
+export const getStates = cache(async (countryId = 1) => {
+  const { data } = await supabase.from('states').select('*').eq('country_id', countryId).order('name');
   return data || [];
 });
 
@@ -51,7 +56,7 @@ export const getStateById = cache(async (id: number) => {
 });
 
 export const getCities = cache(async (stateId: number) => {
-  const { data } = await supabase.from('districts').select('*').eq('state_id', stateId);
+  const { data } = await supabase.from('districts').select('*').eq('state_id', stateId).order('name');
   return data || [];
 });
 

@@ -6,6 +6,7 @@ export async function GET(request: NextRequest) {
   const page = parseInt(searchParams.get("page") || "1");
   const limit = parseInt(searchParams.get("limit") || "25");
   const offset = (page - 1) * limit;
+  const countryId = searchParams.get("countryId");
   const stateId = searchParams.get("stateId");
   const cityId = searchParams.get("cityId");
   const name = searchParams.get("q");
@@ -17,6 +18,22 @@ export async function GET(request: NextRequest) {
   // Apply filters
   if (stateId) {
     query = query.eq('state_id', parseInt(stateId));
+  } else if (countryId) {
+    const { data: states, error: statesError } = await supabase
+      .from('states')
+      .select('id')
+      .eq('country_id', parseInt(countryId));
+
+    if (statesError) {
+      return NextResponse.json({ error: statesError.message }, { status: 400 });
+    }
+
+    const stateIds = states?.map((state) => state.id) || [];
+    if (stateIds.length === 0) {
+      return NextResponse.json({ page, limit, data: [], count: 0 });
+    }
+
+    query = query.in('state_id', stateIds);
   }
   if (cityId) {
     query = query.eq('city_id', parseInt(cityId));

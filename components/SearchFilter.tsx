@@ -18,37 +18,89 @@ type DistrictProps = {
   code: string | null
 }
 
+type LocationProps = {
+  id: number
+  name: string
+  code: string | null
+}
+
 export default function SearchFilter() {
-  const [states, setStates] = useState<DistrictProps[]>([])
+  const [countries, setCountries] = useState<LocationProps[]>([])
+  const [states, setStates] = useState<LocationProps[]>([])
+  const [cities, setCities] = useState<DistrictProps[]>([])
   const { 
+    countryId,
     stateId, 
+    cityId,
     searchText,
+    totalCount,
+    setCountryId,
     setStateId, 
+    setCityId,
     setSearchText,
     resetFilters, 
     triggerSearch 
   } = useMosqueFilter()
 
-  // Fetch states on component mount
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch('/api/countries')
+        const data = await response.json()
+        setCountries(Array.isArray(data) ? data : [])
+      } catch (error) {
+        console.error('Failed to fetch countries:', error)
+      }
+    }
+
+    fetchCountries()
+  }, [])
+
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const response = await fetch('/api/states')
+        const response = await fetch(`/api/states?countryId=${countryId}`)
         const data = await response.json()
-        setStates(data)
+        setStates(Array.isArray(data) ? data : [])
       } catch (error) {
         console.error('Failed to fetch states:', error)
+        setStates([])
       }
     }
+
+    setStates([])
+    setCities([])
     fetchStates()
-  }, [])
+  }, [countryId])
+
+  useEffect(() => {
+    if (!stateId) {
+      setCities([])
+      return
+    }
+
+    const fetchCities = async () => {
+      try {
+        const response = await fetch(`/api/cities?stateId=${stateId}`)
+        const data = await response.json()
+        setCities(Array.isArray(data) ? data : [])
+      } catch (error) {
+        console.error('Failed to fetch cities:', error)
+        setCities([])
+      }
+    }
+
+    setCities([])
+    fetchCities()
+  }, [stateId])
 
   return (
-    <div className="mb-8 p-4 bg-background rounded-lg border-[1px]">
-      <div className="grid gap-4 md:grid-cols-3">
+    <>
+    <div className="mb-8 rounded-lg border-[1px] bg-background p-4">
+      <div className="flex flex-col gap-4 lg:flex-row">
         <Input 
           placeholder="Cari Masjid..." 
-          className="md:col-span-2"
+          className="lg:flex-1"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           onKeyDown={(e) => {
@@ -57,10 +109,24 @@ export default function SearchFilter() {
             }
           }}
         />
+        <Select
+          value={countryId}
+          onValueChange={setCountryId}>
+          <SelectTrigger className="lg:w-40">
+            <SelectValue placeholder="Negara" />
+          </SelectTrigger>
+          <SelectContent>
+            {countries.map((country) => (
+              <SelectItem key={country.id} value={country.id.toString()}>
+                {country.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Select 
           value={stateId || ''} 
           onValueChange={setStateId}>
-          <SelectTrigger>
+          <SelectTrigger className="lg:w-40">
             <SelectValue placeholder="Negeri" />
           </SelectTrigger>
           <SelectContent>
@@ -71,11 +137,11 @@ export default function SearchFilter() {
             ))}
           </SelectContent>
         </Select>
-        {/* <Select 
+        <Select 
           value={cityId || ''}
           onValueChange={setCityId}
           disabled={!stateId || cities.length === 0}>
-          <SelectTrigger>
+          <SelectTrigger className="lg:w-40">
             <SelectValue placeholder="Bandar" />
           </SelectTrigger>
           <SelectContent>
@@ -85,13 +151,16 @@ export default function SearchFilter() {
               </SelectItem>
             ))}
           </SelectContent>
-        </Select> */}
+        </Select>
       </div>
       <div className="mt-4 flex justify-end space-x-2">
         <Button onClick={resetFilters} variant="outline">Reset</Button>
         <Button onClick={triggerSearch}>Search</Button>
       </div>
     </div>
+    <p className="-mt-4 mb-6 text-sm text-muted-foreground">
+      {totalCount === null ? 'Jumlah masjid akan dipaparkan selepas carian.' : `${totalCount.toLocaleString()} masjid dijumpai`}
+    </p>
+    </>
   )
 }
-

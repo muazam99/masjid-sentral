@@ -8,17 +8,25 @@ import { useMosqueFilter } from '@/store/use-mosque-filter'
 import Loading from "@/app/(main)/loading";
 
 const MosqueGrid = () => {
-  const { stateId, cityId, searchText, searchTrigger } = useMosqueFilter()
+  const { countryId, stateId, cityId, searchText, searchTrigger, setTotalCount } = useMosqueFilter()
 
   const fetchMosques = useCallback(async (page: number): Promise<MosqueView[]> => {
-    const cacheKey = `mosques_${stateId}_${cityId}_${searchText}_${page}`;
+    const cacheKey = `mosques_${countryId}_${stateId}_${cityId}_${searchText}_${page}`;
     const cachedData = localStorage.getItem(cacheKey);
     
     if (cachedData) {
-      const { timestamp, data } = JSON.parse(cachedData);
+      const { timestamp, data, count } = JSON.parse(cachedData);
       // Check if cache is still valid (1 hour)
       if (Date.now() - timestamp < 3600000 && Array.isArray(data) && data.length > 0) {
-        return data;
+        if (page === 1 && typeof count !== 'number') {
+          localStorage.removeItem(cacheKey);
+        } else {
+          if (page === 1 && typeof count === 'number') {
+            setTotalCount(count);
+          }
+
+          return data;
+        }
       }
 
       localStorage.removeItem(cacheKey);
@@ -29,6 +37,7 @@ const MosqueGrid = () => {
       params.set('page', page.toString())
       params.set('limit', '25')
 
+      if (countryId) params.set('countryId', countryId)
       if (stateId) params.set('stateId', stateId)
       if (cityId) params.set('cityId', cityId)
       if (searchText) params.set('q', searchText)
@@ -41,21 +50,29 @@ const MosqueGrid = () => {
       }
 
       const items = Array.isArray(data.data) ? data.data : [];
+      if (page === 1) {
+        setTotalCount(typeof data.count === 'number' ? data.count : items.length);
+      }
       
       // Cache successful non-empty pages only so a transient API issue does not hide data.
       if (items.length > 0) {
         localStorage.setItem(cacheKey, JSON.stringify({
           timestamp: Date.now(),
-          data: items
+          data: items,
+          count: data.count
         }));
       }
       
       return items;
     } catch (error) {
       console.error("Error fetching mosques:", error);
+      if (page === 1) {
+        setTotalCount(0);
+      }
+
       return [];
     }
-  }, [stateId, cityId, searchText])
+  }, [countryId, stateId, cityId, searchText, setTotalCount])
 
   const {
     items: mosques,
