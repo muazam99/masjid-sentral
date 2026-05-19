@@ -3,8 +3,9 @@ import Layout from '@/components/Layout'
 import MosqueDetail from '@/components/MosqueDetail'
 import { notFound } from 'next/navigation'
 
-export default async function MosqueDetailPage({ params }: { params: { id: string } }) {
-  const mosqueDetails = await getMasjidById(parseInt(params.id));
+export default async function MosqueDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const mosqueDetails = await getMasjidById(parseInt(id));
 
   if (!mosqueDetails) {
     notFound();
@@ -16,4 +17,3 @@ export default async function MosqueDetailPage({ params }: { params: { id: strin
     </Layout>
   )
 }
-

@@ -57,42 +57,52 @@ export default function SearchFilter() {
   }, [])
 
   useEffect(() => {
+    let cancelled = false
     const fetchStates = async () => {
       try {
         const response = await fetch(`/api/states?countryId=${countryId}`)
         const data = await response.json()
-        setStates(Array.isArray(data) ? data : [])
+        if (!cancelled) {
+          setStates(Array.isArray(data) ? data : [])
+        }
       } catch (error) {
         console.error('Failed to fetch states:', error)
-        setStates([])
+        if (!cancelled) setStates([])
       }
     }
 
-    setStates([])
-    setCities([])
     fetchStates()
+    return () => {
+      cancelled = true
+    }
   }, [countryId])
 
   useEffect(() => {
-    if (!stateId) {
-      setCities([])
-      return
-    }
+    if (!stateId) return
 
+    let cancelled = false
     const fetchCities = async () => {
       try {
         const response = await fetch(`/api/cities?stateId=${stateId}`)
         const data = await response.json()
-        setCities(Array.isArray(data) ? data : [])
+        if (!cancelled) {
+          setCities(Array.isArray(data) ? data : [])
+        }
       } catch (error) {
         console.error('Failed to fetch cities:', error)
-        setCities([])
+        if (!cancelled) setCities([])
       }
     }
 
-    setCities([])
     fetchCities()
+    return () => {
+      cancelled = true
+    }
   }, [stateId])
+
+  // Derive visible cities from current stateId so we don't need to reset state
+  // in an effect when stateId clears.
+  const visibleCities = stateId ? cities : []
 
   return (
     <>
@@ -140,12 +150,12 @@ export default function SearchFilter() {
         <Select 
           value={cityId || ''}
           onValueChange={setCityId}
-          disabled={!stateId || cities.length === 0}>
+          disabled={!stateId || visibleCities.length === 0}>
           <SelectTrigger className="lg:w-40">
             <SelectValue placeholder="Bandar" />
           </SelectTrigger>
           <SelectContent>
-            {cities.map((city) => (
+            {visibleCities.map((city) => (
               <SelectItem key={city.id} value={city.id.toString()}>
                 {city.name}
               </SelectItem>

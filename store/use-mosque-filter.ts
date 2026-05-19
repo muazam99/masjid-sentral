@@ -29,5 +29,5 @@ export const useMosqueFilter = create<MosqueFilterState>((set) => ({
   setSearchText: (text) => set({ searchText: text }),
   setTotalCount: (count) => set({ totalCount: count }),
   resetFilters: () => set({ countryId: '1', stateId: null, cityId: null, searchText: '', totalCount: null, searchTrigger: Date.now() }),
-  triggerSearch: () => set((_) => ({ searchTrigger: Date.now() })),
+  triggerSearch: () => set(() => ({ searchTrigger: Date.now() })),
 })) 

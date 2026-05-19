@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -44,8 +46,7 @@ export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
                     src={getR2ImageUrl(mosque.thumbnailUrl) || placeholderImg}
                     alt="Mosque main image"
                     fill
-                    objectFit="cover"
-                    className="absolute"
+                    className="absolute object-cover"
                   />
                 </div>
 

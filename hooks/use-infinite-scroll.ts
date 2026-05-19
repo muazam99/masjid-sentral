@@ -11,16 +11,29 @@ export function useInfiniteScroll<T>(
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const observerRef = useRef<IntersectionObserver | null>(null)
-  const loadMoreRef = useRef<HTMLDivElement | null>(null)
 
-  const loadMore = async () => {
-    if (loading || !hasMore) return
+  const loadingRef = useRef(loading)
+  const hasMoreRef = useRef(hasMore)
+  const pageRef = useRef(page)
+
+  useEffect(() => {
+    loadingRef.current = loading
+  }, [loading])
+  useEffect(() => {
+    hasMoreRef.current = hasMore
+  }, [hasMore])
+  useEffect(() => {
+    pageRef.current = page
+  }, [page])
+
+  const loadMore = useCallback(async () => {
+    if (loadingRef.current || !hasMoreRef.current) return
 
     setLoading(true)
     try {
-      const newItems = await fetchMoreItems(page)
-      const itemsArray = Array.isArray(newItems) ? newItems : [];
-      
+      const newItems = await fetchMoreItems(pageRef.current)
+      const itemsArray = Array.isArray(newItems) ? newItems : []
+
       if (itemsArray.length === 0) {
         setHasMore(false)
       } else {
@@ -33,7 +46,7 @@ export function useInfiniteScroll<T>(
     } finally {
       setLoading(false)
     }
-  }
+  }, [fetchMoreItems])
 
   const refresh = useCallback(async () => {
     setItems([])
@@ -42,7 +55,7 @@ export function useInfiniteScroll<T>(
     setLoading(true)
     try {
       const newItems = await fetchMoreItems(1)
-      const itemsArray = Array.isArray(newItems) ? newItems : [];
+      const itemsArray = Array.isArray(newItems) ? newItems : []
       setItems(itemsArray)
       setHasMore(itemsArray.length > 0)
       setPage(2)
@@ -54,27 +67,36 @@ export function useInfiniteScroll<T>(
     }
   }, [fetchMoreItems])
 
+  const loadMoreRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+        observerRef.current = null
+      }
+
+      if (!node) return
+
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            loadMore()
+          }
+        },
+        { threshold: 0.1 },
+      )
+
+      observerRef.current.observe(node)
+    },
+    [loadMore],
+  )
+
   useEffect(() => {
-    if (!loadMoreRef.current) return
-
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          loadMore()
-        }
-      },
-      { threshold: 0.1 },
-    )
-
-    observerRef.current.observe(loadMoreRef.current)
-
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect()
       }
     }
-  }, [loadMoreRef.current, loading, hasMore, page])
+  }, [])
 
   return { items, loading, hasMore, loadMoreRef, refresh }
 }
-

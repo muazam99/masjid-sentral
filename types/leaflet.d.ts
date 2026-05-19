@@ -1,4 +1,4 @@
 declare module 'leaflet/dist/leaflet.css' {
-  const content: any;
+  const content: string;
   export default content;
 }
