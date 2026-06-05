@@ -4,7 +4,7 @@ import { NextResponse } from "next/server"
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url)
-        const countryId = parseInt(searchParams.get('countryId') || '1')
+        const countryId = searchParams.get('countryId') || 'my'
         const states = await getStates(countryId)
         return NextResponse.json(states)
     } catch (error) {

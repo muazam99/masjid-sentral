@@ -7,6 +7,12 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useMosqueFilter } from '@/store/use-mosque-filter'
 import Loading from "@/app/(main)/loading";
 
+type MosqueApiResponse = {
+  data?: MosqueView[]
+  count?: number
+  error?: string
+}
+
 const MosqueGrid = () => {
   const { countryId, stateId, cityId, searchText, searchTrigger, setTotalCount } = useMosqueFilter()
 
@@ -43,7 +49,7 @@ const MosqueGrid = () => {
       if (searchText) params.set('q', searchText)
 
       const response = await fetch(`/api/mosque?${params.toString()}`);
-      const data = await response.json();
+      const data = (await response.json()) as MosqueApiResponse;
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to fetch mosques");

@@ -12,14 +12,13 @@ import { useState, useEffect } from 'react'
 import { useMosqueFilter } from '@/store/use-mosque-filter'
 
 type DistrictProps = {
-  id: number
-  stateId: number | null  // Changed from parentId
-  name: string  // Changed from value/label to name
-  code: string | null
+  id: string
+  state_id: string
+  name: string
 }
 
 type LocationProps = {
-  id: number
+  id: string
   name: string
   code: string | null
 }
@@ -127,7 +126,7 @@ export default function SearchFilter() {
           </SelectTrigger>
           <SelectContent>
             {countries.map((country) => (
-              <SelectItem key={country.id} value={country.id.toString()}>
+              <SelectItem key={country.id} value={country.id}>
                 {country.name}
               </SelectItem>
             ))}
@@ -141,7 +140,7 @@ export default function SearchFilter() {
           </SelectTrigger>
           <SelectContent>
             {states.map((state) => (
-              <SelectItem key={state.id} value={state.id.toString()}>
+              <SelectItem key={state.id} value={state.id}>
                 {state.name}
               </SelectItem>
             ))}
@@ -156,7 +155,7 @@ export default function SearchFilter() {
           </SelectTrigger>
           <SelectContent>
             {visibleCities.map((city) => (
-              <SelectItem key={city.id} value={city.id.toString()}>
+              <SelectItem key={city.id} value={city.id}>
                 {city.name}
               </SelectItem>
             ))}

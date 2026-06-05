@@ -10,7 +10,7 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: "State ID is required" }, { status: 400 })
         }
 
-        const cities = await getCities(parseInt(stateId))
+        const cities = await getCities(stateId)
         return NextResponse.json(cities)
     } catch (error) {
         return NextResponse.json({ error: `Failed to fetch cities, ${error}` }, { status: 500 })

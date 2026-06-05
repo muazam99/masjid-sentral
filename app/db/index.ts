@@ -1,6 +1,16 @@
-import { createClient } from '@supabase/supabase-js';
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+type CloudflareEnv = {
+  DB: D1Database;
+};
 
-export const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+export function getDb() {
+  const { env } = getCloudflareContext();
+  const db = (env as CloudflareEnv).DB;
+
+  if (!db) {
+    throw new Error("Missing Cloudflare D1 binding: DB");
+  }
+
+  return db;
+}

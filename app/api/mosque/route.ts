@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/app/db";
+import { getDb } from "@/app/db";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -11,45 +11,58 @@ export async function GET(request: NextRequest) {
   const cityId = searchParams.get("cityId");
   const name = searchParams.get("q");
 
-  let query = supabase
-    .from('mosque_list_view')
-    .select('*', { count: 'exact' });
+  const where: string[] = ["m.status = 'active'"];
+  const bindings: Array<string | number> = [];
 
-  // Apply filters
   if (stateId) {
-    query = query.eq('state_id', parseInt(stateId));
+    where.push("m.state_id = ?");
+    bindings.push(stateId);
   } else if (countryId) {
-    const { data: states, error: statesError } = await supabase
-      .from('states')
-      .select('id')
-      .eq('country_id', parseInt(countryId));
-
-    if (statesError) {
-      return NextResponse.json({ error: statesError.message }, { status: 400 });
-    }
-
-    const stateIds = states?.map((state) => state.id) || [];
-    if (stateIds.length === 0) {
-      return NextResponse.json({ page, limit, data: [], count: 0 });
-    }
-
-    query = query.in('state_id', stateIds);
+    where.push("m.country_id = ?");
+    bindings.push(countryId);
   }
   if (cityId) {
-    query = query.eq('city_id', parseInt(cityId));
+    where.push("m.city_id = ?");
+    bindings.push(cityId);
   }
   if (name) {
-    query = query.ilike('name', `%${name}%`);
+    where.push("LOWER(m.name) LIKE LOWER(?)");
+    bindings.push(`%${name}%`);
   }
 
-  // Apply pagination
-  query = query.range(offset, offset + limit - 1);
+  const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
+  const db = getDb();
 
-  const { data, error, count } = await query;
+  const countRow = await db
+    .prepare(`SELECT COUNT(*) AS count FROM masjids m ${whereSql}`)
+    .bind(...bindings)
+    .first<{ count: number }>();
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
-  }
+  const { results } = await db
+    .prepare(
+      `SELECT
+        m.id,
+        m.name,
+        thumb.path AS image_path,
+        co.name AS country_name,
+        m.state_id,
+        m.city_id,
+        s.name AS state_name,
+        c.name AS city_name
+      FROM masjids m
+      LEFT JOIN countries co ON co.id = m.country_id
+      LEFT JOIN states s ON s.id = m.state_id
+      LEFT JOIN cities c ON c.id = m.city_id
+      LEFT JOIN masjid_images thumb
+        ON thumb.masjid_id = m.id
+        AND thumb.is_thumbnail = 1
+      ${whereSql}
+      GROUP BY m.id
+      ORDER BY m.name
+      LIMIT ? OFFSET ?`
+    )
+    .bind(...bindings, limit, offset)
+    .all();
 
-  return NextResponse.json({ page, limit, data, count });
+  return NextResponse.json({ page, limit, data: results ?? [], count: countRow?.count ?? 0 });
 }

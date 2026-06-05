@@ -17,7 +17,7 @@ interface MosqueFilterState {
 }
 
 export const useMosqueFilter = create<MosqueFilterState>((set) => ({
-  countryId: '1',
+  countryId: 'my',
   stateId: null,
   cityId: null,
   searchText: '',
@@ -28,6 +28,6 @@ export const useMosqueFilter = create<MosqueFilterState>((set) => ({
   setCityId: (id) => set({ cityId: id }),
   setSearchText: (text) => set({ searchText: text }),
   setTotalCount: (count) => set({ totalCount: count }),
-  resetFilters: () => set({ countryId: '1', stateId: null, cityId: null, searchText: '', totalCount: null, searchTrigger: Date.now() }),
+  resetFilters: () => set({ countryId: 'my', stateId: null, cityId: null, searchText: '', totalCount: null, searchTrigger: Date.now() }),
   triggerSearch: () => set(() => ({ searchTrigger: Date.now() })),
 })) 
