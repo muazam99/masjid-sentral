@@ -29,11 +29,12 @@ type MapArea = {
 
 export default function DirectoryPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [sortBy, setSortBy] = useState<string>('default')
+  const [sortBy, setSortBy] = useState<string>('distance')
   const [showMap, setShowMap] = useState<boolean>(true)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [isLocating, setIsLocating] = useState<boolean>(false)
   const mapAreaRef = useRef<MapArea | null>(null)
+  const isAutoLocatedRef = useRef<boolean>(false)
 
   const {
     countryId,
@@ -140,9 +141,13 @@ export default function DirectoryPage() {
   }, [refresh])
 
   const requestLocation = useCallback(
-    (onSuccess?: (loc: { lat: number; lng: number }) => void) => {
+    (onSuccess?: (loc: { lat: number; lng: number }) => void, isAuto = false) => {
       if (typeof window === 'undefined' || !('geolocation' in navigator)) {
-        alert('Geolocation is not supported by your browser.')
+        if (!isAuto) {
+          alert('Geolocation is not supported by your browser.')
+        } else {
+          setSortBy('default')
+        }
         return
       }
 
@@ -160,10 +165,14 @@ export default function DirectoryPage() {
         (err) => {
           setIsLocating(false)
           console.warn('Geolocation error:', err)
-          if (err.code === 1) {
-            alert('Location permission was denied. Please allow location access in your browser settings.')
+          if (!isAuto) {
+            if (err.code === 1) {
+              alert('Location permission was denied. Please allow location access in your browser settings.')
+            } else {
+              alert('Could not determine location. Please check device location services.')
+            }
           } else {
-            alert('Could not determine location. Please check device location services.')
+            setSortBy('default')
           }
         },
         { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 }
@@ -171,6 +180,17 @@ export default function DirectoryPage() {
     },
     []
   )
+
+  // Automatically locate user on mount to make Near Me default
+  useEffect(() => {
+    if (!isAutoLocatedRef.current) {
+      isAutoLocatedRef.current = true
+      requestLocation((loc) => {
+        mapAreaRef.current = { lat: loc.lat, lng: loc.lng, radius: 20 }
+        refresh()
+      }, true)
+    }
+  }, [requestLocation, refresh])
 
   const handleNearMeClick = useCallback(() => {
     // When Near Me is clicked, reset state/city filters so there's no conflict with user location
@@ -181,7 +201,7 @@ export default function DirectoryPage() {
     requestLocation((loc) => {
       mapAreaRef.current = { lat: loc.lat, lng: loc.lng, radius: 20 }
       refresh()
-    })
+    }, false)
   }, [setStateId, setCityId, requestLocation, refresh])
 
   const handleSortChange = useCallback(
@@ -189,9 +209,15 @@ export default function DirectoryPage() {
       setSortBy(newSort)
       if (newSort === 'distance') {
         if (!userLocation) {
-          requestLocation()
+          requestLocation((loc) => {
+            mapAreaRef.current = { lat: loc.lat, lng: loc.lng, radius: 20 }
+            refresh()
+          }, false)
+        } else {
+          mapAreaRef.current = { lat: userLocation.lat, lng: userLocation.lng, radius: 20 }
+          refresh()
         }
-      } else if (newSort === 'default') {
+      } else if (newSort === 'default' || newSort === 'name') {
         if (mapAreaRef.current) {
           mapAreaRef.current = null
           refresh()
