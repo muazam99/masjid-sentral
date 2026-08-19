@@ -45,15 +45,10 @@ export default function MosqueCardList({ mosque, distanceStr }: MosqueCardListPr
             <h3 className="text-lg font-bold text-[#173524] dark:text-[#F7F5EF] truncate group-hover:text-[#1F5A3B] dark:group-hover:text-[#8BC99C] transition-colors">
               {mosque.name}
             </h3>
-            {distanceStr ? (
+            {distanceStr && (
               <span className="inline-flex items-center gap-1.5 h-6.5 rounded-full bg-[#F1EEE6] dark:bg-[#203829] px-2.5 text-[11px] font-bold text-[#173524] dark:text-[#F7F5EF] shrink-0">
                 <Route className="h-3 w-3 text-[#1F5A3B] dark:text-[#8BC99C]" />
                 {distanceStr}
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1.5 h-6.5 rounded-full bg-[#F1EEE6] dark:bg-[#203829] px-2.5 text-[11px] font-bold text-[#173524] dark:text-[#F7F5EF] shrink-0">
-                <Route className="h-3 w-3 text-[#1F5A3B] dark:text-[#8BC99C]" />
-                1.8 km
               </span>
             )}
           </div>

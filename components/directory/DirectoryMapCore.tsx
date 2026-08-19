@@ -18,7 +18,20 @@ const escapeHtmlAttr = (str: string) =>
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
 
-// Custom Emerald Landmark Pin Icon
+// Custom User Location Pin Icon (Blue pulsating radar beacon)
+const createUserLocationIcon = () =>
+  L.divIcon({
+    className: 'user-location-pin',
+    html: `<div style="position: relative; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+      <div style="position: absolute; width: 24px; height: 24px; border-radius: 50%; background-color: rgba(37, 99, 235, 0.35); animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+      <div style="position: relative; width: 14px; height: 14px; border-radius: 50%; background-color: #2563EB; border: 2.5px solid #FFFFFF; box-shadow: 0 2px 6px rgba(0,0,0,0.35);"></div>
+    </div>`,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    popupAnchor: [0, -12],
+  })
+
+// Custom Emerald Masjid Pin Icon
 const createEmeraldPinIcon = (name: string) =>
   L.divIcon({
     className: 'custom-emerald-pin',
@@ -34,26 +47,44 @@ const createEmeraldPinIcon = (name: string) =>
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       border: 2px solid #FFFFFF;
     " title="${escapeHtmlAttr(name)}">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7 12 2"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2.5a.75.75 0 0 1 .75.75v.5a4.5 4.5 0 0 1 3.75 4.45v1.3h1.75a.75.75 0 0 1 .75.75v9.5a.75.75 0 0 1-.75.75H5a.75.75 0 0 1-.75-.75v-9.5a.75.75 0 0 1 .75-.75h1.75v-1.3A4.5 4.5 0 0 1 11.25 3.75v-.5a.75.75 0 0 1 .75-.75Zm-2 16.5h4v-3a2 2 0 1 0-4 0v3Zm-4.25 0h2.75v-3a3.5 3.5 0 1 1 7 0v3h2.75V11H5.75v8Zm1.75-9.5h9V8.2a3 3 0 0 0-3-3 3 3 0 0 0-3 3v1.3Z"/>
+      </svg>
     </div>`,
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32],
   })
 
-// Map View Recenter Controller Component (only recenters on filter changes)
+// Map View Recenter Controller Component
 function MapRecenter({
   mosques,
   resetRecenterTrigger,
+  userLocation,
 }: {
   mosques: MosqueView[]
   resetRecenterTrigger?: number
+  userLocation?: { lat: number; lng: number } | null
 }) {
   const map = useMap()
   const initialFitDone = useRef(false)
   const lastTrigger = useRef<number | undefined>(resetRecenterTrigger)
+  const lastUserLocation = useRef<{ lat: number; lng: number } | null | undefined>(null)
 
   useEffect(() => {
+    // Check if user location just changed
+    const userLocationChanged =
+      userLocation &&
+      (!lastUserLocation.current ||
+        lastUserLocation.current.lat !== userLocation.lat ||
+        lastUserLocation.current.lng !== userLocation.lng)
+
+    if (userLocationChanged) {
+      lastUserLocation.current = userLocation
+      map.setView([userLocation.lat, userLocation.lng], 14, { animate: true })
+      return
+    }
+
     const isExplicitTrigger = resetRecenterTrigger !== undefined && resetRecenterTrigger !== lastTrigger.current
     const shouldRecenter = isExplicitTrigger || (!initialFitDone.current && mosques.length > 0)
 
@@ -74,7 +105,7 @@ function MapRecenter({
         map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15, animate: true })
       }
     }
-  }, [mosques, resetRecenterTrigger, map])
+  }, [mosques, resetRecenterTrigger, userLocation, map])
 
   return null
 }
@@ -187,6 +218,7 @@ interface DirectoryMapCoreProps {
   isLoading?: boolean
   onSearchArea?: (center: { lat: number; lng: number }, radius: number) => void
   resetRecenterTrigger?: number
+  userLocation?: { lat: number; lng: number } | null
 }
 
 export default function DirectoryMapCore({
@@ -195,6 +227,7 @@ export default function DirectoryMapCore({
   isLoading = false,
   onSearchArea,
   resetRecenterTrigger,
+  userLocation,
 }: DirectoryMapCoreProps) {
   // Ensure Leaflet marker asset paths are resolved
   useEffect(() => {
@@ -218,7 +251,11 @@ export default function DirectoryMapCore({
   )
 
   const defaultCenter: [number, number] =
-    validMosques.length > 0 ? [validMosques[0].lat!, validMosques[0].lng!] : [3.1412, 101.6915]
+    userLocation
+      ? [userLocation.lat, userLocation.lng]
+      : validMosques.length > 0
+      ? [validMosques[0].lat!, validMosques[0].lng!]
+      : [3.1412, 101.6915]
 
   return (
     <div className="relative rounded-xl overflow-hidden border border-[#D8D2C2] dark:border-[#355443] bg-muted" style={{ height }}>
@@ -234,7 +271,7 @@ export default function DirectoryMapCore({
 
       <MapContainer
         center={defaultCenter}
-        zoom={12}
+        zoom={userLocation ? 14 : 12}
         style={{ height: '100%', width: '100%' }}
         scrollWheelZoom={true}
       >
@@ -243,12 +280,34 @@ export default function DirectoryMapCore({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <MapRecenter mosques={validMosques} resetRecenterTrigger={resetRecenterTrigger} />
+        <MapRecenter
+          mosques={validMosques}
+          resetRecenterTrigger={resetRecenterTrigger}
+          userLocation={userLocation}
+        />
 
         <MapEventsHandler
           onSearchArea={onSearchArea}
           resetRecenterTrigger={resetRecenterTrigger}
         />
+
+        {/* User Current Location Marker */}
+        {userLocation && (
+          <Marker
+            position={[userLocation.lat, userLocation.lng]}
+            icon={createUserLocationIcon()}
+            zIndexOffset={1000}
+          >
+            <Popup className="custom-leaflet-popup">
+              <div className="p-1.5 text-center">
+                <p className="text-xs font-bold text-[#173524] flex items-center justify-center gap-1">
+                  <span>📍</span>
+                  <span>Your Current Location</span>
+                </p>
+              </div>
+            </Popup>
+          </Marker>
+        )}
 
         {validMosques.map((m) => (
           <Marker

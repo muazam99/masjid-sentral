@@ -18,6 +18,7 @@ interface DirectoryMapProps {
   isLoading?: boolean
   onSearchArea?: (center: { lat: number; lng: number }, radius: number) => void
   resetRecenterTrigger?: number
+  userLocation?: { lat: number; lng: number } | null
 }
 
 export default function DirectoryMap({
@@ -26,6 +27,7 @@ export default function DirectoryMap({
   isLoading,
   onSearchArea,
   resetRecenterTrigger,
+  userLocation,
 }: DirectoryMapProps) {
   return (
     <DirectoryMapCore
@@ -34,6 +36,7 @@ export default function DirectoryMap({
       isLoading={isLoading}
       onSearchArea={onSearchArea}
       resetRecenterTrigger={resetRecenterTrigger}
+      userLocation={userLocation}
     />
   )
 }

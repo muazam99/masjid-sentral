@@ -13,6 +13,7 @@ import { useMosqueFilter } from '@/store/use-mosque-filter'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 import { MosqueView } from '@/types/Mosque'
 import { getR2ImageUrl } from '@/utils/images'
+import { calculateDistanceKm, formatDistance } from '@/lib/api'
 
 type MosqueApiResponse = {
   data?: MosqueView[]
@@ -30,10 +31,21 @@ export default function DirectoryPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [sortBy, setSortBy] = useState<string>('default')
   const [showMap, setShowMap] = useState<boolean>(true)
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
+  const [isLocating, setIsLocating] = useState<boolean>(false)
   const mapAreaRef = useRef<MapArea | null>(null)
 
-  const { countryId, stateId, cityId, searchText, searchTrigger, totalCount, setTotalCount } =
-    useMosqueFilter()
+  const {
+    countryId,
+    stateId,
+    cityId,
+    searchText,
+    searchTrigger,
+    totalCount,
+    setTotalCount,
+    setStateId,
+    setCityId,
+  } = useMosqueFilter()
 
   // Clean up any stale localStorage keys from previous sessions on mount
   useEffect(() => {
@@ -127,9 +139,100 @@ export default function DirectoryPage() {
     })
   }, [refresh])
 
-  const displayMosques = [...mosques].sort((a, b) => {
+  const requestLocation = useCallback(
+    (onSuccess?: (loc: { lat: number; lng: number }) => void) => {
+      if (typeof window === 'undefined' || !('geolocation' in navigator)) {
+        alert('Geolocation is not supported by your browser.')
+        return
+      }
+
+      setIsLocating(true)
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setIsLocating(false)
+          const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+          setUserLocation(loc)
+          if (onSuccess) {
+            onSuccess(loc)
+          }
+        },
+        (err) => {
+          setIsLocating(false)
+          console.warn('Geolocation error:', err)
+          if (err.code === 1) {
+            alert('Location permission was denied. Please allow location access in your browser settings.')
+          } else {
+            alert('Could not determine location. Please check device location services.')
+          }
+        },
+        { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 }
+      )
+    },
+    []
+  )
+
+  const handleNearMeClick = useCallback(() => {
+    // When Near Me is clicked, reset state/city filters so there's no conflict with user location
+    setStateId(null)
+    setCityId(null)
+    setSortBy('distance')
+
+    requestLocation((loc) => {
+      mapAreaRef.current = { lat: loc.lat, lng: loc.lng, radius: 20 }
+      refresh()
+    })
+  }, [setStateId, setCityId, requestLocation, refresh])
+
+  const handleSortChange = useCallback(
+    (newSort: string) => {
+      setSortBy(newSort)
+      if (newSort === 'distance') {
+        if (!userLocation) {
+          requestLocation()
+        }
+      } else if (newSort === 'default') {
+        if (mapAreaRef.current) {
+          mapAreaRef.current = null
+          refresh()
+        }
+      }
+    },
+    [userLocation, requestLocation, refresh]
+  )
+
+  const displayMosquesWithDistance = [...mosques].map((m) => {
+    let distanceKm: number | null = null
+    let distanceStr: string | undefined = undefined
+
+    if (
+      userLocation &&
+      typeof m.lat === 'number' &&
+      typeof m.lng === 'number' &&
+      m.lat !== 0 &&
+      m.lng !== 0
+    ) {
+      distanceKm = calculateDistanceKm(userLocation.lat, userLocation.lng, m.lat, m.lng)
+      distanceStr = formatDistance(distanceKm)
+    }
+
+    return {
+      ...m,
+      distanceKm,
+      distanceStr,
+    }
+  })
+
+  const sortedMosques = [...displayMosquesWithDistance].sort((a, b) => {
     if (sortBy === 'name') {
       return (a.name || '').localeCompare(b.name || '')
+    }
+    if (sortBy === 'distance') {
+      if (a.distanceKm !== null && b.distanceKm !== null) {
+        return a.distanceKm - b.distanceKm
+      }
+      if (a.distanceKm !== null) return -1
+      if (b.distanceKm !== null) return 1
     }
     return 0
   })
@@ -152,21 +255,23 @@ export default function DirectoryPage() {
             
             {/* Results Header Toolbar (Count on Left, Sort + View Mode + Map Toggle on Right) */}
             <DirectoryToolbar
-              count={totalCount ?? displayMosques.length}
+              count={totalCount ?? sortedMosques.length}
               viewMode={viewMode}
               onViewModeChange={setViewMode}
               sortBy={sortBy}
-              onSortChange={setSortBy}
+              onSortChange={handleSortChange}
               showMap={showMap}
               onToggleShowMap={handleToggleShowMap}
+              isLocating={isLocating}
+              onNearMe={handleNearMeClick}
             />
 
             {/* Cards View */}
-            {loading && displayMosques.length === 0 ? (
+            {loading && sortedMosques.length === 0 ? (
               <div className="py-12">
                 <Loading />
               </div>
-            ) : displayMosques.length === 0 ? (
+            ) : sortedMosques.length === 0 ? (
               <div className="rounded-lg border border-[#D8D2C2] dark:border-[#355443] bg-card p-10 text-center space-y-2">
                 <p className="text-base font-extrabold text-foreground">No masjids found</p>
                 <p className="text-xs text-muted-foreground">
@@ -175,24 +280,26 @@ export default function DirectoryPage() {
               </div>
             ) : viewMode === 'grid' ? (
               <div className={`grid grid-cols-1 sm:grid-cols-2 ${showMap ? '' : 'md:grid-cols-3 xl:grid-cols-4'} gap-4`}>
-                {displayMosques.map((m) => {
+                {sortedMosques.map((m) => {
                   const imageUrl = getR2ImageUrl(m.image_path)
                   return (
                     <MosqueCardGrid
                       key={m.id}
                       mosque={{ ...m, image_path: imageUrl }}
+                      distanceStr={m.distanceStr}
                     />
                   )
                 })}
               </div>
             ) : (
               <div className="space-y-3">
-                {displayMosques.map((m) => {
+                {sortedMosques.map((m) => {
                   const imageUrl = getR2ImageUrl(m.image_path)
                   return (
                     <MosqueCardList
                       key={m.id}
                       mosque={{ ...m, image_path: imageUrl }}
+                      distanceStr={m.distanceStr}
                     />
                   )
                 })}
@@ -202,7 +309,7 @@ export default function DirectoryPage() {
             {/* Infinite Scroll Trigger */}
             <div ref={loadMoreRef} className="flex justify-center py-4">
               {loading && <Loading />}
-              {!hasMore && displayMosques.length > 0 && (
+              {!hasMore && sortedMosques.length > 0 && (
                 <p className="text-xs text-muted-foreground font-medium">
                   End of directory results
                 </p>
@@ -215,11 +322,12 @@ export default function DirectoryPage() {
           {showMap && (
             <div className="hidden lg:block lg:col-span-5 sticky top-20">
               <DirectoryMap
-                mosques={displayMosques}
+                mosques={sortedMosques}
                 height="650px"
                 isLoading={loading}
                 onSearchArea={handleMapSearchArea}
                 resetRecenterTrigger={searchTrigger}
+                userLocation={userLocation}
               />
             </div>
           )}

@@ -48,15 +48,10 @@ export default function MosqueCardGrid({ mosque, distanceStr }: MosqueCardGridPr
             <h3 className="text-sm font-bold text-[#173524] dark:text-[#F7F5EF] line-clamp-1 group-hover:text-[#1F5A3B] dark:group-hover:text-[#8BC99C] transition-colors">
               {mosque.name}
             </h3>
-            {distanceStr ? (
+            {distanceStr && (
               <span className="inline-flex items-center gap-1 h-5 rounded-full bg-[#F1EEE6] dark:bg-[#203829] px-1.5 text-[9px] font-bold text-[#173524] dark:text-[#F7F5EF] shrink-0">
                 <Route className="h-2.5 w-2.5 text-[#1F5A3B] dark:text-[#8BC99C]" />
                 {distanceStr}
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 h-5 rounded-full bg-[#F1EEE6] dark:bg-[#203829] px-1.5 text-[9px] font-bold text-[#173524] dark:text-[#F7F5EF] shrink-0">
-                <Route className="h-2.5 w-2.5 text-[#1F5A3B] dark:text-[#8BC99C]" />
-                1.8 km
               </span>
             )}
           </div>
