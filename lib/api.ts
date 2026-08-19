@@ -181,6 +181,12 @@ export async function fetchMasjidsFromApi(options: {
       city_id: item.city_id,
       state_name: resolvedStateName,
       city_name: resolvedCityName,
+      address: item.address ?? null,
+      lat: item.lat ?? null,
+      lng: item.lng ?? null,
+      type_id: item.type_id ?? null,
+      status: item.status ?? null,
+      jumaat_available: item.jumaat_available ?? null,
     };
   });
 

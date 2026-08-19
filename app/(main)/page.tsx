@@ -1,13 +1,24 @@
 import Layout from '@/components/Layout'
-import SearchFilter from '@/components/SearchFilter'
-import MosqueGrid from '@/components/MosqueGrid'
+import HeroSection from '@/components/landing/HeroSection'
+import TrustStrip from '@/components/landing/TrustStrip'
+import TestimonialsSection from '@/components/landing/TestimonialsSection'
+import NarrativeSection from '@/components/landing/NarrativeSection'
+import ImpactGridSection from '@/components/landing/ImpactGridSection'
+import ApiPreviewSection from '@/components/landing/ApiPreviewSection'
+import SubmissionFlowSection from '@/components/landing/SubmissionFlowSection'
+import CtaSection from '@/components/landing/CtaSection'
 
 export default function Home() {
   return (
     <Layout>
-      <SearchFilter />
-      <MosqueGrid />
+      <HeroSection />
+      <TrustStrip />
+      <TestimonialsSection />
+      <NarrativeSection />
+      <ImpactGridSection />
+      <ApiPreviewSection />
+      <SubmissionFlowSection />
+      <CtaSection />
     </Layout>
   )
 }
-
