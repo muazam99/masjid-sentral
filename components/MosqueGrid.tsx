@@ -21,18 +21,23 @@ const MosqueGrid = () => {
     const cachedData = localStorage.getItem(cacheKey);
     
     if (cachedData) {
-      const { timestamp, data, count } = JSON.parse(cachedData);
-      // Check if cache is still valid (1 hour)
-      if (Date.now() - timestamp < 3600000 && Array.isArray(data) && data.length > 0) {
-        if (page === 1 && typeof count !== 'number') {
-          localStorage.removeItem(cacheKey);
-        } else {
-          if (page === 1 && typeof count === 'number') {
-            setTotalCount(count);
-          }
+      try {
+        const { timestamp, data, count } = JSON.parse(cachedData);
+        const isStale = Array.isArray(data) && data.some((item: MosqueView) => item.state_name?.startsWith('my-'));
 
-          return data;
+        if (!isStale && Date.now() - timestamp < 3600000 && Array.isArray(data) && data.length > 0) {
+          if (page === 1 && typeof count !== 'number') {
+            localStorage.removeItem(cacheKey);
+          } else {
+            if (page === 1 && typeof count === 'number') {
+              setTotalCount(count);
+            }
+
+            return data;
+          }
         }
+      } catch {
+        // ignore parse error
       }
 
       localStorage.removeItem(cacheKey);
