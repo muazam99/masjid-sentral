@@ -245,6 +245,18 @@ export async function fetchMasjidByIdFromApi(id: number): Promise<Mosque | null>
   const resolvedStateLabel = detail.state_name || formatLocationName(detail.state_id);
   const resolvedCityLabel = detail.city_name || formatLocationName(detail.city_id);
 
+  // Compute rating breakdown (1-5 stars)
+  const reviewsPerRating: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  if (detail.reviews && detail.reviews.length > 0) {
+    for (const r of detail.reviews) {
+      const star = Math.max(1, Math.min(5, Math.round(r.rating)));
+      reviewsPerRating[star] = (reviewsPerRating[star] || 0) + 1;
+    }
+  }
+
+  // Find website url from contacts if present
+  const websiteContact = detail.contacts?.find((c) => c.type === 'website');
+
   return {
     id: detail.id,
     name: detail.name,
@@ -256,19 +268,37 @@ export async function fetchMasjidByIdFromApi(id: number): Promise<Mosque | null>
     latitude: detail.lat,
     longitude: detail.lng,
     address: detail.address,
-    reviewsPerRating: null,
+    reviewsPerRating,
     countryId: detail.country_id,
     stateId: detail.state_id,
     cityId: detail.city_id,
-    websiteUrl: null,
+    countryName: detail.country_name || (detail.country_id ? detail.country_id.toUpperCase() : null),
+    stateName: resolvedStateLabel,
+    cityName: resolvedCityLabel,
+    websiteUrl: websiteContact ? websiteContact.value : null,
     phone: detail.telephone,
+    email: detail.email,
     category: detail.type_id,
     status: detail.status,
+    jumaatAvailable: detail.jumaat_available === 1,
     addedByUserId: null,
     createdAt: detail.created_at ? new Date(detail.created_at) : null,
     updatedAt: detail.updated_at ? new Date(detail.updated_at) : null,
     state: detail.state_id ? { id: detail.state_id, label: resolvedStateLabel } : null,
     city: detail.city_id ? { id: detail.city_id, label: resolvedCityLabel } : null,
+    facilities: detail.facilities || [],
+    contacts: detail.contacts || [],
+    reviews: (detail.reviews || []).map((r) => ({
+      ...r,
+      user_name: r.source_app ? `Contributor (${r.source_app})` : 'Community Contributor',
+      user_initial: (r.source_app || 'C').charAt(0).toUpperCase(),
+    })),
+    events: (detail.events || []).map((e) => ({
+      ...e,
+      location: 'Main Hall',
+    })),
+    avgRating: detail.avg_rating ?? null,
+    reviewCount: detail.review_count ?? (detail.reviews ? detail.reviews.length : 0),
   };
 }
 

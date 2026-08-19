@@ -40854,7 +40854,8 @@
               "content": "Jalan Perdana, Tasik Perdana, 50480 Kuala Lumpur",
               "lineHeight": 1.4,
               "fontFamily": "$ms-font-sans",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -41206,7 +41207,8 @@
               "content": "Masjid Negara is Malaysia's national mosque and a major Kuala Lumpur landmark. This profile keeps visitor-facing information in one place: address, facilities, location, prayer times and contribution options.",
               "lineHeight": 1.5,
               "fontFamily": "$ms-font-sans",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -42016,7 +42018,8 @@
               "content": "Times shown for the masjid area and refined later with official source integration.",
               "lineHeight": 1.4,
               "fontFamily": "$ms-font-sans",
-              "fontSize": 11
+              "fontSize": 11,
+              "fontWeight": "normal"
             }
           ]
         },
@@ -42051,7 +42054,8 @@
               "content": "Scan the QR to contribute directly to Masjid Negara.",
               "lineHeight": 1.4,
               "fontFamily": "$ms-font-sans",
-              "fontSize": 12
+              "fontSize": 12,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -42533,7 +42537,8 @@
                       "fill": "$ms-color-muted-foreground",
                       "content": "Masjid Negara official page",
                       "fontFamily": "$ms-font-sans",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -42605,7 +42610,8 @@
                       "fill": "$ms-color-muted-foreground",
                       "content": "Photos and visitor updates",
                       "fontFamily": "$ms-font-sans",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -42677,7 +42683,8 @@
                       "fill": "$ms-color-muted-foreground",
                       "content": "Official information link",
                       "fontFamily": "$ms-font-sans",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -42749,7 +42756,8 @@
                       "fill": "$ms-color-muted-foreground",
                       "content": "Talks and recorded sessions",
                       "fontFamily": "$ms-font-sans",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -42864,7 +42872,8 @@
                       "fill": "$ms-color-muted-foreground",
                       "content": "Address and facilities",
                       "fontFamily": "$ms-font-sans",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -42926,7 +42935,8 @@
                       "fill": "$ms-color-muted-foreground",
                       "content": "Photo contribution",
                       "fontFamily": "$ms-font-sans",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -42988,7 +42998,8 @@
                       "fill": "$ms-color-muted-foreground",
                       "content": "Prayer space notes",
                       "fontFamily": "$ms-font-sans",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -43179,7 +43190,8 @@
               "content": "Jalan Perdana, Tasik Perdana, 50480 Kuala Lumpur",
               "lineHeight": 1.4,
               "fontFamily": "$ms-font-sans",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -43551,7 +43563,8 @@
               "content": "Programs, kuliah and community activities hosted by Masjid Negara.",
               "lineHeight": 1.4,
               "fontFamily": "$ms-font-sans",
-              "fontSize": 12
+              "fontSize": 12,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -43638,7 +43651,8 @@
                       "fill": "#DCE9E0",
                       "content": "7.30 PM – 10.30 PM",
                       "fontFamily": "$ms-font-sans",
-                      "fontSize": 12
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -43789,7 +43803,8 @@
                       "fill": "$ms-color-muted-foreground",
                       "content": "Thursday · 8:00 PM",
                       "fontFamily": "$ms-font-sans",
-                      "fontSize": 12
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "frame",
@@ -43926,7 +43941,8 @@
                       "fill": "$ms-color-muted-foreground",
                       "content": "Sunday · 10:00 AM",
                       "fontFamily": "$ms-font-sans",
-                      "fontSize": 12
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "frame",
@@ -44063,7 +44079,8 @@
                       "fill": "$ms-color-muted-foreground",
                       "content": "Saturday · 7:30 AM",
                       "fontFamily": "$ms-font-sans",
-                      "fontSize": 12
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "frame",
@@ -44159,7 +44176,8 @@
                   "fill": "$ms-color-muted-foreground",
                   "content": "After Subuh",
                   "fontFamily": "$ms-font-sans",
-                  "fontSize": 12
+                  "fontSize": 12,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -44201,7 +44219,8 @@
                   "fill": "$ms-color-muted-foreground",
                   "content": "9:00 AM",
                   "fontFamily": "$ms-font-sans",
-                  "fontSize": 12
+                  "fontSize": 12,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -44243,7 +44262,8 @@
                   "fill": "$ms-color-muted-foreground",
                   "content": "10:30 AM",
                   "fontFamily": "$ms-font-sans",
-                  "fontSize": 12
+                  "fontSize": 12,
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -44394,7 +44414,8 @@
               "content": "Jalan Perdana, Tasik Perdana, 50480 Kuala Lumpur",
               "lineHeight": 1.4,
               "fontFamily": "$ms-font-sans",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -44809,7 +44830,8 @@
               "fill": "$ms-color-muted-foreground",
               "content": "Based on 128 community reviews",
               "fontFamily": "$ms-font-sans",
-              "fontSize": 11
+              "fontSize": 11,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -45218,7 +45240,8 @@
                           "fill": "$ms-color-muted-foreground",
                           "content": "Visited for Jumaat prayer",
                           "fontFamily": "$ms-font-sans",
-                          "fontSize": 11
+                          "fontSize": 11,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -45244,7 +45267,8 @@
                   "content": "Clean facilities, clear signage and the prayer hall was well managed even during peak attendance.",
                   "lineHeight": 1.45,
                   "fontFamily": "$ms-font-sans",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -45312,7 +45336,8 @@
                           "fill": "$ms-color-muted-foreground",
                           "content": "Attended a weekend class",
                           "fontFamily": "$ms-font-sans",
-                          "fontSize": 11
+                          "fontSize": 11,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -45338,7 +45363,8 @@
                   "content": "The program was easy to find from the main entrance and volunteers were helpful with directions.",
                   "lineHeight": 1.45,
                   "fontFamily": "$ms-font-sans",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -45406,7 +45432,8 @@
                           "fill": "$ms-color-muted-foreground",
                           "content": "Nearby visitor",
                           "fontFamily": "$ms-font-sans",
-                          "fontSize": 11
+                          "fontSize": 11,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -45432,7 +45459,8 @@
                   "content": "Peaceful environment and convenient access to the nearby city area after prayers.",
                   "lineHeight": 1.45,
                   "fontFamily": "$ms-font-sans",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -45583,7 +45611,8 @@
               "content": "Jalan Perdana, Tasik Perdana, 50480 Kuala Lumpur",
               "lineHeight": 1.4,
               "fontFamily": "$ms-font-sans",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -45922,7 +45951,8 @@
               "content": "Reach the masjid office for general enquiries, official correspondence and visitor assistance.",
               "lineHeight": 1.4,
               "fontFamily": "$ms-font-sans",
-              "fontSize": 12
+              "fontSize": 12,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -46237,7 +46267,8 @@
               "content": "Jalan Perdana, Tasik Perdana, 50480 Kuala Lumpur, Malaysia",
               "lineHeight": 1.45,
               "fontFamily": "$ms-font-sans",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -46344,7 +46375,8 @@
                   "fill": "#DCE9E0",
                   "content": "Masjid leadership",
                   "fontFamily": "$ms-font-sans",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -46376,7 +46408,8 @@
                   "fill": "$ms-color-muted-foreground",
                   "content": "Prayer and religious guidance",
                   "fontFamily": "$ms-font-sans",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -46408,7 +46441,8 @@
                   "fill": "$ms-color-muted-foreground",
                   "content": "Office and correspondence",
                   "fontFamily": "$ms-font-sans",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -46440,7 +46474,8 @@
                   "fill": "$ms-color-muted-foreground",
                   "content": "Facilities and visitor support",
                   "fontFamily": "$ms-font-sans",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -46472,7 +46507,8 @@
                   "fill": "$ms-color-muted-foreground",
                   "content": "Receipts and contribution records",
                   "fontFamily": "$ms-font-sans",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -46504,7 +46540,8 @@
                   "fill": "$ms-color-muted-foreground",
                   "content": "Classes and community activities",
                   "fontFamily": "$ms-font-sans",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 }
               ]
             }

@@ -1,161 +1,133 @@
 'use client'
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Phone, Camera, ArrowLeft } from 'lucide-react'
-// import { TikTokEmbed } from 'react-social-media-embed'
-import placeholderImg from '../public/placeholder.svg'
+import { useState, useEffect } from 'react'
 import { Mosque } from '@/types/Mosque'
-import { getR2ImageUrl } from '@/utils/images'
-// import QrCodeDisplay from './qrCodeDisplay'  // Commented out as fields not in new schema
-import dynamic from 'next/dynamic'
+import { calculateDistanceKm, formatDistance } from '@/lib/api'
+import DetailBreadcrumb from './detail/DetailBreadcrumb'
+import DetailPhotoGallery from './detail/DetailPhotoGallery'
+import DetailIdentityHeader from './detail/DetailIdentityHeader'
+import DetailTabs, { DetailTabType } from './detail/DetailTabs'
+import DetailsTab from './detail/tabs/DetailsTab'
+import EventsTab from './detail/tabs/EventsTab'
+import ReviewsTab from './detail/tabs/ReviewsTab'
+import ContactsTab from './detail/tabs/ContactsTab'
+import DetailSidebar from './detail/sidebar/DetailSidebar'
 
-// Dynamic import to avoid SSR issues with Leaflet
-const LeafletMap = dynamic(() => import('@/components/LeafletMap'), {
-  ssr: false,
-  loading: () => (
-    <div className="aspect-video rounded-lg overflow-hidden border border-border bg-muted flex items-center justify-center">
-      <p className="text-muted-foreground">Loading map...</p>
-    </div>
-  ),
-})
+interface MosqueDetailProps {
+  mosque: Mosque
+}
 
+export default function MosqueDetail({ mosque }: MosqueDetailProps) {
+  const [activeTab, setActiveTab] = useState<DetailTabType>('details')
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
 
-export default function MosqueDetail( { mosque } : { mosque: Mosque }) {
+  // Request user location for distance calculation
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setUserLocation({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          })
+        },
+        () => {
+          // Ignored if denied
+        },
+        { timeout: 5000 }
+      )
+    }
+  }, [])
+
+  // Calculate distance if coordinates available
+  const distanceStr =
+    userLocation && mosque.latitude && mosque.longitude
+      ? formatDistance(
+          calculateDistanceKm(
+            userLocation.lat,
+            userLocation.lng,
+            mosque.latitude,
+            mosque.longitude
+          )
+        )
+      : null
+
   return (
-    <div className="bg-background text-foreground">
-      <div className="container mx-auto px-4">
-        <div className="mb-4">
-          <Link href="/">
-            <Button variant="outline">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Kembali
-            </Button>
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <h1 className="text-3xl font-bold  mb-2">{mosque.name}</h1>
-            <p className="text-muted-foreground mb-4">{mosque.address}</p>
+    <div className="bg-[#F7F5EF] dark:bg-[#0F1F17] text-[#173524] dark:text-[#F7F5EF] min-h-screen transition-colors pb-16">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 space-y-4">
+        
+        {/* 1. Breadcrumb */}
+        <DetailBreadcrumb mosqueName={mosque.name} />
 
-            <div className="relative">
-              <div className="lg:grid lg:grid-cols-3 gap-4 mb-4">
-                <div className="row-span-2 relative rounded-lg overflow-hidden h-[400px]">
-                  <Image
-                    src={getR2ImageUrl(mosque.thumbnailUrl) || placeholderImg}
-                    alt="Mosque main image"
-                    fill
-                    className="absolute object-cover"
-                  />
-                </div>
+        {/* 2. Asymmetric 3-Photo Hero Gallery */}
+        <DetailPhotoGallery
+          images={mosque.imageUrls}
+          thumbnailUrl={mosque.thumbnailUrl}
+          mosqueName={mosque.name}
+        />
 
-                <div className="hidden lg:grid lg:col-span-2 lg:grid-cols-2 lg:gap-4">
-                  {mosque.imageUrls?.slice(0, 4).map((url, index) => (
-                    <div key={index} className="relative rounded-lg overflow-hidden h-[190px]">
-                      <Image src={getR2ImageUrl(url) || placeholderImg} alt={`Mosque image ${index + 2}`} fill className="object-cover" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-              {mosque.imageUrls && mosque.imageUrls.length > 4 && (
-                <div className="absolute bottom-0 right-0 m-4">
-                  <Button variant="outline">
-                    <Camera className="mr-2 h-4 w-4" /> View All Photos
-                  </Button>
-                </div>
-              )}
-            </div>
-            {/* <p className="text-xl font-semibold  mb-2">{mosque.city?.label}, {mosque.state?.label}</p> */}
-            <div className="mb-16">
-              <Link href={mosque.googleMapsUrl || ''} className="text-[#14532D] underline" target='_blank'>
-                Cari di Google Maps
-              </Link>
-            </div>
+        {/* 3. Identity Header & Actions */}
+        <DetailIdentityHeader
+          mosqueId={mosque.id}
+          mosqueName={mosque.name}
+          address={mosque.address}
+          stateName={mosque.stateName}
+          cityName={mosque.cityName}
+          latitude={mosque.latitude}
+          longitude={mosque.longitude}
+          googleMapsUrl={mosque.googleMapsUrl}
+          distanceStr={distanceStr}
+        />
 
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">Lokasi Masjid</h2>
-              <LeafletMap
-                latitude={mosque.latitude}
-                longitude={mosque.longitude}
-                googleMapsUrl={mosque.googleMapsUrl}
+        {/* 4. Tab Navigation Strip */}
+        <DetailTabs
+          activeTab={activeTab}
+          onChange={setActiveTab}
+          eventsCount={mosque.events?.length || 0}
+          reviewsCount={mosque.reviewCount || 0}
+        />
+
+        {/* 5. Two-Column Layout (Main Content + Sticky Sidebar) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Main Column (~65-70% width on Desktop) */}
+          <div className="lg:col-span-8 space-y-6">
+            {activeTab === 'details' && (
+              <DetailsTab mosque={mosque} />
+            )}
+            {activeTab === 'events' && (
+              <EventsTab events={mosque.events} />
+            )}
+            {activeTab === 'reviews' && (
+              <ReviewsTab
+                reviews={mosque.reviews}
+                avgRating={mosque.avgRating}
+                reviewCount={mosque.reviewCount}
+                reviewsPerRating={mosque.reviewsPerRating}
+                mosqueName={mosque.name}
               />
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Hubungi Kami</h2>
-              <div className="space-y-2">
-                <p>
-                  <Phone className="inline-block mr-2" />
-                  <a href={`tel:${mosque.phone}`} className="text-primary">
-                    {mosque.phone}
-                  </a>
-                </p>
-              </div>
-            </div>
+            )}
+            {activeTab === 'contacts' && (
+              <ContactsTab
+                phone={mosque.phone}
+                email={mosque.email}
+                websiteUrl={mosque.websiteUrl}
+                googleMapsUrl={mosque.googleMapsUrl}
+                address={mosque.address}
+                contacts={mosque.contacts}
+                mosqueName={mosque.name}
+                stateName={mosque.stateName}
+              />
+            )}
           </div>
 
-          <div className="lg:col-span-1 mt-10">
-            {/* <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">Social Media</h2>
-              <div className="flex flex-col items-end space-y-4">
-                {Object.entries(mosque.socialMedia).map(([platform, url]) => (
-                  <a key={platform} href={url} target="_blank" rel="noopener noreferrer">
-                    <Image src={`/${platform}-icon.svg`} alt={`${platform} icon`} width={24} height={24} />
-                  </a>
-                ))}
-              </div>
-            </div> */}
-
-            {/* Donation QR Code section - commented out as fields not in new schema */}
-            {/* <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-2">Derma</h2>
-              <p className="text-muted-foreground mb-4">Salurkan sumbangan kepada masjid ini melalui  QR akaun masjid yang tertera.</p>
-              <div className="border-[1.75px] bg-background p-4 rounded-lg flex justify-center items-center cursor-pointer">
-                { mosque.qrContent ? (
-                  <div className="flex flex-col items-center gap-2">
-                    <QrCodeDisplay
-                      qrContent={mosque.qrContent}
-                      supportedPayments={mosque.supportedPayments}
-                      name='Donation QR Code'
-                      size={200}
-                    />
-                    <p className="text-[8px] sm:text-xs text-zinc-400 text-center">
-                      Powered by:{" "}
-                      <a
-                        href="https://sedekah.je"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        SedekahJe
-                      </a>
-                    </p>
-                  </div>
-                ) : (
-                <Image
-                  src={placeholderImg}
-                  alt="Donation QR Code"
-                  width={250} height={200}
-                  className="mx-auto"
-                  />
-                )}
-              </div>
-            </div> */}
-
-            {/* <div>
-              <h2 className="text-2xl font-bold mb-4">TikTok Review</h2>
-              <div className="border rounded-lg overflow-hidden dark:border-border">
-                <TikTokEmbed url={mosque.tiktokReview.videoUrl} width="100%" />
-                <div className="p-4">
-                  <p className="mb-2">{mosque.tiktokReview.caption}</p>
-<Button variant="outline" className="w-full text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-950">
-                    Watch Now
-                  </Button>
-                </div>
-              </div>
-            </div> */}
+          {/* Sticky Sidebar (~30-35% width on Desktop) */}
+          <div className="lg:col-span-4">
+            <DetailSidebar mosque={mosque} />
           </div>
+
         </div>
+
       </div>
     </div>
   )

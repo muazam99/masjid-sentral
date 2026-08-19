@@ -15,6 +15,44 @@ export type MosqueView = {
   jumaat_available?: number | null;
 };
 
+export interface MosqueFacility {
+  id: number;
+  masjid_id: number;
+  facility: string;
+}
+
+export interface MosqueContact {
+  id?: number;
+  masjid_id: number;
+  type: string; // 'facebook' | 'instagram' | 'twitter' | 'youtube' | 'whatsapp' | 'website' | 'phone' | 'email'
+  value: string;
+}
+
+export interface MosqueReview {
+  id: number;
+  masjid_id: number;
+  rating: number;
+  message: string | null;
+  source_app: string;
+  created_at: string;
+  user_name?: string;
+  user_initial?: string;
+  context_tag?: string;
+}
+
+export interface MosqueEvent {
+  id: number;
+  masjid_id: number;
+  title: string;
+  description: string | null;
+  start_at: string;
+  end_at: string | null;
+  status: string;
+  rrule: string | null;
+  image_url?: string | null;
+  location?: string | null;
+}
+
 export type Mosque = {
   id: number | null;
   name: string | null;
@@ -26,14 +64,19 @@ export type Mosque = {
   latitude: number | null;
   longitude: number | null;
   address: string | null;
-  reviewsPerRating: unknown | null;
+  reviewsPerRating: Record<number, number> | null;
   countryId: string | null;
   stateId: string | null;
   cityId: string | null;
+  countryName: string | null;
+  stateName: string | null;
+  cityName: string | null;
   websiteUrl: string | null;
   phone: string | null;
-  category: string | null;
+  email: string | null;
+  category: string | null; // 'masjid' | 'surau' | 'musolla'
   status: string | null;
+  jumaatAvailable: boolean;
   addedByUserId: number | null;
   createdAt: Date | null;
   updatedAt: Date | null;
@@ -45,4 +88,10 @@ export type Mosque = {
     id: string | null;
     label: string | null;
   } | null;
+  facilities: MosqueFacility[];
+  contacts: MosqueContact[];
+  reviews: MosqueReview[];
+  events: MosqueEvent[];
+  avgRating: number | null;
+  reviewCount: number;
 };
