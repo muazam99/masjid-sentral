@@ -13,7 +13,7 @@ export default function Navbar() {
 
   const navLinks = [
     { label: 'Directory', href: '/directory' },
-    { label: 'API Docs', href: '/#api-preview' },
+    { label: 'API Docs', href: '/docs' },
     { label: 'Submit', href: '/#submission-flow' },
     { label: 'About Us', href: '/#narrative' },
   ]
@@ -35,7 +35,10 @@ export default function Navbar() {
         {/* Desktop Nav Links */}
         <nav className="hidden md:flex items-center gap-1 rounded-full border border-[#355443] bg-[#172D20] p-1 px-3 shadow-inner">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href || (link.href === '/directory' && pathname.startsWith('/directory'))
+            const isActive =
+              pathname === link.href ||
+              (link.href === '/directory' && pathname.startsWith('/directory')) ||
+              (link.href === '/docs' && pathname.startsWith('/docs'))
             return (
               <Link
                 key={link.href}
