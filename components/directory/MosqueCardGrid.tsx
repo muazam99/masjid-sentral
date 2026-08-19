@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { MapPin, Route, CheckCircle2 } from 'lucide-react'
+import { MapPin, Route } from 'lucide-react'
 import { MosqueView } from '@/types/Mosque'
 import { formatLocationName } from '@/lib/api'
 import FacilityChip from './FacilityChip'
@@ -18,7 +18,7 @@ export default function MosqueCardGrid({ mosque, distanceStr }: MosqueCardGridPr
     ? `${formattedCity}, ${formattedState}`
     : formattedState || 'Malaysia')
 
-  const sampleFacilities = ['wheelchair', 'parking', 'women']
+  const facilities = (mosque.facilities ?? []).slice(0, 3)
 
   return (
     <Link href={`/mosque/${mosque.id}`} className="group block">
@@ -33,15 +33,10 @@ export default function MosqueCardGrid({ mosque, distanceStr }: MosqueCardGridPr
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
-          
-          {/* Verified Badge */}
-          <span className="absolute top-2.5 left-2.5 inline-flex items-center gap-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[10px] font-bold px-2 py-0.5 backdrop-blur-xs">
-            <CheckCircle2 className="h-3 w-3" /> verified
-          </span>
         </div>
 
         {/* Content Details Container - Padding [10px, 12px, 12px, 12px] */}
-        <div className="pt-[10px] px-[12px] pb-[12px] flex-1 flex flex-col justify-between space-y-1.5">
+        <div className="pt-[10px] px-[12px] pb-[12px] flex-1 flex flex-col space-y-1.5">
           
           {/* Title Row */}
           <div className="flex items-center justify-between gap-2">
@@ -63,11 +58,13 @@ export default function MosqueCardGrid({ mosque, distanceStr }: MosqueCardGridPr
           </div>
 
           {/* Facility Chips Row */}
-          <div className="flex flex-wrap gap-1 pt-0.5">
-            {sampleFacilities.map((fac, idx) => (
-              <FacilityChip key={idx} facility={fac} size="sm" />
-            ))}
-          </div>
+          {facilities.length > 0 && (
+            <div className="flex flex-wrap gap-1 pt-0.5">
+              {facilities.map((fac, idx) => (
+                <FacilityChip key={idx} facility={fac} size="sm" />
+              ))}
+            </div>
+          )}
 
         </div>
 

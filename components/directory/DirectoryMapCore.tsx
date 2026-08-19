@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet'
+import MarkerClusterGroup from 'react-leaflet-cluster'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import Link from 'next/link'
@@ -56,56 +57,92 @@ const createEmeraldPinIcon = (name: string) =>
     popupAnchor: [0, -32],
   })
 
+// Custom Emerald Cluster Icon — count badge for overlapping masjid pins
+const createClusterIcon = (cluster: { getChildCount: () => number }) => {
+  const count = cluster.getChildCount()
+  const size = count < 10 ? 36 : count < 100 ? 44 : 52
+  return L.divIcon({
+    className: 'custom-emerald-cluster',
+    html: `<div style="
+      background-color: #1F5A3B;
+      color: #FFFFFF;
+      width: ${size}px;
+      height: ${size}px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: ${count < 100 ? '13px' : '11px'};
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+      border: 3px solid #FFFFFF;
+    ">${count}</div>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+  })
+}
+
 // Map View Recenter Controller Component
 function MapRecenter({
   mosques,
   resetRecenterTrigger,
   userLocation,
+  locateTrigger,
 }: {
   mosques: MosqueView[]
   resetRecenterTrigger?: number
   userLocation?: { lat: number; lng: number } | null
+  locateTrigger?: number
 }) {
   const map = useMap()
   const initialFitDone = useRef(false)
   const lastTrigger = useRef<number | undefined>(resetRecenterTrigger)
-  const lastUserLocation = useRef<{ lat: number; lng: number } | null | undefined>(null)
+  const lastLocateTrigger = useRef<number | undefined>(locateTrigger)
+  // Consumed only once a fitBounds/setView with valid coords actually happens —
+  // keeps a search/state-filter trigger "pending" across the async gap between
+  // the trigger firing and the new mosques list arriving (Pitfall: race condition)
+  const pendingBoundsFit = useRef(false)
 
+  // Any explicit "locate me" click should always recenter on the user, even if
+  // the coordinates are identical to the last known location (still outside view)
   useEffect(() => {
-    // Check if user location just changed
-    const userLocationChanged =
-      userLocation &&
-      (!lastUserLocation.current ||
-        lastUserLocation.current.lat !== userLocation.lat ||
-        lastUserLocation.current.lng !== userLocation.lng)
-
-    if (userLocationChanged) {
-      lastUserLocation.current = userLocation
+    const locateTriggerFired = locateTrigger !== undefined && locateTrigger !== lastLocateTrigger.current
+    if (locateTriggerFired && userLocation) {
+      lastLocateTrigger.current = locateTrigger
       map.setView([userLocation.lat, userLocation.lng], 14, { animate: true })
-      return
     }
+  }, [locateTrigger, userLocation, map])
 
-    const isExplicitTrigger = resetRecenterTrigger !== undefined && resetRecenterTrigger !== lastTrigger.current
-    const shouldRecenter = isExplicitTrigger || (!initialFitDone.current && mosques.length > 0)
-
-    if (shouldRecenter) {
-      if (isExplicitTrigger) {
-        lastTrigger.current = resetRecenterTrigger
-      }
-      initialFitDone.current = true
-
-      const validCoords = mosques
-        .filter((m) => typeof m.lat === 'number' && typeof m.lng === 'number' && !isNaN(m.lat) && !isNaN(m.lng) && m.lat !== 0 && m.lng !== 0)
-        .map((m) => [m.lat!, m.lng!] as [number, number])
-
-      if (validCoords.length === 1) {
-        map.setView(validCoords[0], 14, { animate: true })
-      } else if (validCoords.length > 1) {
-        const bounds = L.latLngBounds(validCoords)
-        map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15, animate: true })
-      }
+  // Mark a bounds-fit as pending whenever the search/filter trigger changes
+  useEffect(() => {
+    if (resetRecenterTrigger !== undefined && resetRecenterTrigger !== lastTrigger.current) {
+      lastTrigger.current = resetRecenterTrigger
+      pendingBoundsFit.current = true
     }
-  }, [mosques, resetRecenterTrigger, userLocation, map])
+  }, [resetRecenterTrigger])
+
+  // Perform the actual fitBounds once mosques for the pending trigger have arrived
+  useEffect(() => {
+    const shouldRecenter = pendingBoundsFit.current || !initialFitDone.current
+
+    if (!shouldRecenter) return
+
+    const validCoords = mosques
+      .filter((m) => typeof m.lat === 'number' && typeof m.lng === 'number' && !isNaN(m.lat) && !isNaN(m.lng) && m.lat !== 0 && m.lng !== 0)
+      .map((m) => [m.lat!, m.lng!] as [number, number])
+
+    if (validCoords.length === 0) return
+
+    initialFitDone.current = true
+    pendingBoundsFit.current = false
+
+    if (validCoords.length === 1) {
+      map.setView(validCoords[0], 14, { animate: true })
+    } else {
+      const bounds = L.latLngBounds(validCoords)
+      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15, animate: true })
+    }
+  }, [mosques, map])
 
   return null
 }
@@ -219,6 +256,7 @@ interface DirectoryMapCoreProps {
   onSearchArea?: (center: { lat: number; lng: number }, radius: number) => void
   resetRecenterTrigger?: number
   userLocation?: { lat: number; lng: number } | null
+  locateTrigger?: number
 }
 
 export default function DirectoryMapCore({
@@ -228,6 +266,7 @@ export default function DirectoryMapCore({
   onSearchArea,
   resetRecenterTrigger,
   userLocation,
+  locateTrigger,
 }: DirectoryMapCoreProps) {
   // Ensure Leaflet marker asset paths are resolved
   useEffect(() => {
@@ -239,15 +278,20 @@ export default function DirectoryMapCore({
     })
   }, [])
 
-  // Filter mosques with valid lat/lng coordinates
-  const validMosques = mosques.filter(
-    (m) =>
-      typeof m.lat === 'number' &&
-      typeof m.lng === 'number' &&
-      !isNaN(m.lat) &&
-      !isNaN(m.lng) &&
-      m.lat !== 0 &&
-      m.lng !== 0
+  // Filter mosques with valid lat/lng coordinates — memoized so MapRecenter only
+  // sees a new reference when `mosques` itself changes, not on every render
+  const validMosques = useMemo(
+    () =>
+      mosques.filter(
+        (m) =>
+          typeof m.lat === 'number' &&
+          typeof m.lng === 'number' &&
+          !isNaN(m.lat) &&
+          !isNaN(m.lng) &&
+          m.lat !== 0 &&
+          m.lng !== 0
+      ),
+    [mosques]
   )
 
   const defaultCenter: [number, number] =
@@ -284,6 +328,7 @@ export default function DirectoryMapCore({
           mosques={validMosques}
           resetRecenterTrigger={resetRecenterTrigger}
           userLocation={userLocation}
+          locateTrigger={locateTrigger}
         />
 
         <MapEventsHandler
@@ -309,40 +354,47 @@ export default function DirectoryMapCore({
           </Marker>
         )}
 
-        {validMosques.map((m) => (
-          <Marker
-            key={m.id}
-            position={[m.lat!, m.lng!]}
-            icon={createEmeraldPinIcon(m.name || 'Masjid')}
-          >
-            <Popup className="custom-leaflet-popup">
-              <div className="w-56 p-1 space-y-2">
-                <div className="relative h-28 w-full rounded-md overflow-hidden bg-muted">
-                  <img
-                    src={m.image_path || '/placeholder.svg'}
-                    alt={m.name || 'Masjid'}
-                    className="h-full w-full object-cover"
-                  />
+        <MarkerClusterGroup
+          iconCreateFunction={createClusterIcon}
+          maxClusterRadius={60}
+          spiderfyOnMaxZoom={true}
+          showCoverageOnHover={false}
+        >
+          {validMosques.map((m) => (
+            <Marker
+              key={m.id}
+              position={[m.lat!, m.lng!]}
+              icon={createEmeraldPinIcon(m.name || 'Masjid')}
+            >
+              <Popup className="custom-leaflet-popup">
+                <div className="w-56 p-1 space-y-2">
+                  <div className="relative h-28 w-full rounded-md overflow-hidden bg-muted">
+                    <img
+                      src={m.image_path || '/placeholder.svg'}
+                      alt={m.name || 'Masjid'}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-bold text-[#173524] leading-tight">
+                      {m.name}
+                    </h4>
+                    <p className="text-[11px] text-[#5A725F] leading-tight">
+                      {formatLocationName(m.city_name)}, {formatLocationName(m.state_name)}
+                    </p>
+                    <Link
+                      href={`/mosque/${m.id}`}
+                      className="inline-flex items-center gap-1 text-xs font-bold text-[#1F5A3B] hover:underline pt-1"
+                    >
+                      <span>View details</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <h4 className="text-sm font-bold text-[#173524] leading-tight">
-                    {m.name}
-                  </h4>
-                  <p className="text-[11px] text-[#5A725F] leading-tight">
-                    {formatLocationName(m.city_name)}, {formatLocationName(m.state_name)}
-                  </p>
-                  <Link
-                    href={`/mosque/${m.id}`}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-[#1F5A3B] hover:underline pt-1"
-                  >
-                    <span>View details</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
-                </div>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+              </Popup>
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
       </MapContainer>
     </div>
   )

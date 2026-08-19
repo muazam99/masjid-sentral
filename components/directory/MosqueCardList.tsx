@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Route, CheckCircle2 } from 'lucide-react'
+import { Route } from 'lucide-react'
 import { MosqueView } from '@/types/Mosque'
 import { formatLocationName } from '@/lib/api'
 import FacilityChip from './FacilityChip'
@@ -18,7 +18,7 @@ export default function MosqueCardList({ mosque, distanceStr }: MosqueCardListPr
     ? `${formattedCity}, ${formattedState}`
     : formattedState || 'Malaysia')
 
-  const sampleFacilities = ['wheelchair', 'parking', 'women']
+  const facilities = (mosque.facilities ?? []).slice(0, 3)
 
   return (
     <Link href={`/mosque/${mosque.id}`} className="group block">
@@ -32,9 +32,6 @@ export default function MosqueCardList({ mosque, distanceStr }: MosqueCardListPr
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <span className="absolute top-2 left-2 inline-flex items-center gap-0.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[9px] font-bold px-1.5 py-0.5 backdrop-blur-xs">
-            <CheckCircle2 className="h-2.5 w-2.5" /> verified
-          </span>
         </div>
 
         {/* Details Column - Gap 9px, Right Padding 18px */}
@@ -59,11 +56,13 @@ export default function MosqueCardList({ mosque, distanceStr }: MosqueCardListPr
           </p>
 
           {/* Facility Chips Row */}
-          <div className="flex flex-wrap gap-1.5 pt-0.5">
-            {sampleFacilities.map((fac, idx) => (
-              <FacilityChip key={idx} facility={fac} size="md" />
-            ))}
-          </div>
+          {facilities.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pt-0.5">
+              {facilities.map((fac, idx) => (
+                <FacilityChip key={idx} facility={fac} size="md" />
+              ))}
+            </div>
+          )}
 
         </div>
 

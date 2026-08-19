@@ -1,12 +1,22 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Search, Map, Building2, SlidersHorizontal, X, ArrowRight, ChevronDown } from 'lucide-react'
+import { Search, SlidersHorizontal, X, ArrowRight, ChevronDown, Navigation } from 'lucide-react'
 import { useMosqueFilter } from '@/store/use-mosque-filter'
 import { StateFilterSelect } from './StateFilterSelect'
 import { CityFilterSelect } from './CityFilterSelect'
 
-export default function DirectorySearchPanel() {
+interface DirectorySearchPanelProps {
+  sortBy: string
+  isLocating?: boolean
+  onNearMe?: () => void
+}
+
+export default function DirectorySearchPanel({
+  sortBy,
+  isLocating = false,
+  onNearMe,
+}: DirectorySearchPanelProps) {
   const {
     searchText,
     setSearchText,
@@ -83,6 +93,23 @@ export default function DirectorySearchPanel() {
           <span>Facilities</span>
           <ChevronDown className="h-3.5 w-3.5 text-[#5A725F] dark:text-[#B8C8B9]" />
         </div>
+
+        {/* Near Me Quick Button */}
+        {onNearMe && (
+          <button
+            type="button"
+            onClick={onNearMe}
+            className={`flex h-[42px] items-center gap-1.5 px-3.5 rounded-lg border text-xs font-semibold transition-all ${
+              sortBy === 'distance'
+                ? 'bg-[#1F5A3B] text-white border-[#1F5A3B]'
+                : 'bg-white dark:bg-[#102319] text-[#173524] dark:text-[#F7F5EF] border-[#D8D2C2] dark:border-[#355443] hover:border-[#1F5A3B]'
+            }`}
+            title="Find mosques near my current location"
+          >
+            <Navigation className={`h-3.5 w-3.5 text-[#1F5A3B] dark:text-[#A3E635] ${sortBy === 'distance' ? 'text-white' : ''} ${isLocating ? 'animate-spin' : ''}`} />
+            <span>{isLocating ? 'Locating...' : 'Near Me'}</span>
+          </button>
+        )}
 
         {/* Clear Filters Button */}
         {hasActiveFilters && (

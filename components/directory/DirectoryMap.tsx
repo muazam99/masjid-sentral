@@ -19,6 +19,7 @@ interface DirectoryMapProps {
   onSearchArea?: (center: { lat: number; lng: number }, radius: number) => void
   resetRecenterTrigger?: number
   userLocation?: { lat: number; lng: number } | null
+  locateTrigger?: number
 }
 
 export default function DirectoryMap({
@@ -28,6 +29,7 @@ export default function DirectoryMap({
   onSearchArea,
   resetRecenterTrigger,
   userLocation,
+  locateTrigger,
 }: DirectoryMapProps) {
   return (
     <DirectoryMapCore
@@ -37,6 +39,7 @@ export default function DirectoryMap({
       onSearchArea={onSearchArea}
       resetRecenterTrigger={resetRecenterTrigger}
       userLocation={userLocation}
+      locateTrigger={locateTrigger}
     />
   )
 }

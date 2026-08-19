@@ -13,6 +13,7 @@ export type MosqueView = {
   type_id?: string | null;
   status?: string | null;
   jumaat_available?: number | null;
+  facilities?: string[];
 };
 
 export interface MosqueFacility {

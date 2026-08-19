@@ -41172,10 +41172,7 @@
           "cornerRadius": 12,
           "layout": "vertical",
           "gap": 12,
-          "padding": [
-            20,
-            0
-          ],
+          "padding": 20,
           "children": [
             {
               "type": "text",

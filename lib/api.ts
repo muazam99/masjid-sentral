@@ -68,6 +68,7 @@ export type ApiMasjidListItem = {
   created_at: string;
   updated_at: string;
   thumbnail_url: string | null;
+  facilities?: string[];
 };
 
 export type ApiMasjidDetail = {
@@ -210,6 +211,7 @@ export async function fetchMasjidsFromApi(options: {
       type_id: item.type_id ?? null,
       status: item.status ?? null,
       jumaat_available: item.jumaat_available ?? null,
+      facilities: item.facilities ?? [],
     };
   });
 

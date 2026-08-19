@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Layout from '@/components/Layout'
 import DirectoryHeader from '@/components/directory/DirectoryHeader'
 import DirectorySearchPanel from '@/components/directory/DirectorySearchPanel'
@@ -33,6 +33,7 @@ export default function DirectoryPage() {
   const [showMap, setShowMap] = useState<boolean>(true)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [isLocating, setIsLocating] = useState<boolean>(false)
+  const [locateTrigger, setLocateTrigger] = useState<number>(0)
   const mapAreaRef = useRef<MapArea | null>(null)
   const isAutoLocatedRef = useRef<boolean>(false)
 
@@ -158,6 +159,7 @@ export default function DirectoryPage() {
           setIsLocating(false)
           const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude }
           setUserLocation(loc)
+          setLocateTrigger(Date.now())
           if (onSuccess) {
             onSuccess(loc)
           }
@@ -204,64 +206,47 @@ export default function DirectoryPage() {
     }, false)
   }, [setStateId, setCityId, requestLocation, refresh])
 
-  const handleSortChange = useCallback(
-    (newSort: string) => {
-      setSortBy(newSort)
-      if (newSort === 'distance') {
-        if (!userLocation) {
-          requestLocation((loc) => {
-            mapAreaRef.current = { lat: loc.lat, lng: loc.lng, radius: 20 }
-            refresh()
-          }, false)
-        } else {
-          mapAreaRef.current = { lat: userLocation.lat, lng: userLocation.lng, radius: 20 }
-          refresh()
-        }
-      } else if (newSort === 'default' || newSort === 'name') {
-        if (mapAreaRef.current) {
-          mapAreaRef.current = null
-          refresh()
-        }
+  // Memoized so the array reference is stable across unrelated re-renders —
+  // MapRecenter relies on this prop only changing when the underlying data does
+  // (Pitfall: an unmemoized array here caused the map to consume a pending
+  // recenter using the stale pre-fetch list, before new filter results arrived)
+  const sortedMosques = useMemo(() => {
+    const displayMosquesWithDistance = mosques.map((m) => {
+      let distanceKm: number | null = null
+      let distanceStr: string | undefined = undefined
+
+      if (
+        userLocation &&
+        typeof m.lat === 'number' &&
+        typeof m.lng === 'number' &&
+        m.lat !== 0 &&
+        m.lng !== 0
+      ) {
+        distanceKm = calculateDistanceKm(userLocation.lat, userLocation.lng, m.lat, m.lng)
+        distanceStr = formatDistance(distanceKm)
       }
-    },
-    [userLocation, requestLocation, refresh]
-  )
 
-  const displayMosquesWithDistance = [...mosques].map((m) => {
-    let distanceKm: number | null = null
-    let distanceStr: string | undefined = undefined
-
-    if (
-      userLocation &&
-      typeof m.lat === 'number' &&
-      typeof m.lng === 'number' &&
-      m.lat !== 0 &&
-      m.lng !== 0
-    ) {
-      distanceKm = calculateDistanceKm(userLocation.lat, userLocation.lng, m.lat, m.lng)
-      distanceStr = formatDistance(distanceKm)
-    }
-
-    return {
-      ...m,
-      distanceKm,
-      distanceStr,
-    }
-  })
-
-  const sortedMosques = [...displayMosquesWithDistance].sort((a, b) => {
-    if (sortBy === 'name') {
-      return (a.name || '').localeCompare(b.name || '')
-    }
-    if (sortBy === 'distance') {
-      if (a.distanceKm !== null && b.distanceKm !== null) {
-        return a.distanceKm - b.distanceKm
+      return {
+        ...m,
+        distanceKm,
+        distanceStr,
       }
-      if (a.distanceKm !== null) return -1
-      if (b.distanceKm !== null) return 1
-    }
-    return 0
-  })
+    })
+
+    return [...displayMosquesWithDistance].sort((a, b) => {
+      if (sortBy === 'name') {
+        return (a.name || '').localeCompare(b.name || '')
+      }
+      if (sortBy === 'distance') {
+        if (a.distanceKm !== null && b.distanceKm !== null) {
+          return a.distanceKm - b.distanceKm
+        }
+        if (a.distanceKm !== null) return -1
+        if (b.distanceKm !== null) return 1
+      }
+      return 0
+    })
+  }, [mosques, userLocation, sortBy])
 
   return (
     <Layout>
@@ -271,7 +256,11 @@ export default function DirectoryPage() {
         <DirectoryHeader totalCount={totalCount} />
 
         {/* Directory Search & Filter Panel */}
-        <DirectorySearchPanel />
+        <DirectorySearchPanel
+          sortBy={sortBy}
+          isLocating={isLocating}
+          onNearMe={handleNearMeClick}
+        />
 
         {/* Split Layout: Results Column + Sticky Map Column */}
         <div className={`grid grid-cols-1 ${showMap ? 'lg:grid-cols-12 gap-6' : ''} items-start`}>
@@ -284,12 +273,8 @@ export default function DirectoryPage() {
               count={totalCount ?? sortedMosques.length}
               viewMode={viewMode}
               onViewModeChange={setViewMode}
-              sortBy={sortBy}
-              onSortChange={handleSortChange}
               showMap={showMap}
               onToggleShowMap={handleToggleShowMap}
-              isLocating={isLocating}
-              onNearMe={handleNearMeClick}
             />
 
             {/* Cards View */}
@@ -349,11 +334,12 @@ export default function DirectoryPage() {
             <div className="hidden lg:block lg:col-span-5 sticky top-20">
               <DirectoryMap
                 mosques={sortedMosques}
-                height="650px"
+                height="calc(100vh - 6rem)"
                 isLoading={loading}
                 onSearchArea={handleMapSearchArea}
                 resetRecenterTrigger={searchTrigger}
                 userLocation={userLocation}
+                locateTrigger={locateTrigger}
               />
             </div>
           )}
