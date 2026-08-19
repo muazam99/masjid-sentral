@@ -1,6 +1,6 @@
 'use client'
 
-import { LayoutGrid, List, ArrowUpDown } from 'lucide-react'
+import { LayoutGrid, List, ArrowUpDown, Map } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -15,6 +15,8 @@ interface DirectoryToolbarProps {
   onViewModeChange: (mode: 'grid' | 'list') => void
   sortBy: string
   onSortChange: (sort: string) => void
+  showMap?: boolean
+  onToggleShowMap?: () => void
 }
 
 export default function DirectoryToolbar({
@@ -23,6 +25,8 @@ export default function DirectoryToolbar({
   onViewModeChange,
   sortBy,
   onSortChange,
+  showMap = true,
+  onToggleShowMap,
 }: DirectoryToolbarProps) {
   return (
     <div className="flex h-[42px] w-full items-center justify-between">
@@ -32,7 +36,7 @@ export default function DirectoryToolbar({
         {count.toLocaleString()} {count === 1 ? 'masjid' : 'masjids'}
       </h2>
 
-      {/* Right Group: Sort Control + View Toggle Group */}
+      {/* Right Group: Sort Control + View Toggle Group + Map Toggle */}
       <div className="flex items-center gap-2 h-[38px]">
         
         {/* Sort Control Dropdown (Pencil w3QMr spec using Radix UI Select) */}
@@ -85,6 +89,22 @@ export default function DirectoryToolbar({
           </button>
 
         </div>
+
+        {/* Map Toggle Button */}
+        {onToggleShowMap && (
+          <button
+            onClick={onToggleShowMap}
+            className={`hidden lg:flex h-[38px] items-center gap-1.5 px-3 rounded-lg border text-xs font-semibold transition-all ${
+              showMap
+                ? 'bg-[#1F5A3B] text-white border-[#1F5A3B]'
+                : 'bg-white dark:bg-[#102319] text-[#5A725F] dark:text-[#B8C8B9] border-[#D8D2C2] dark:border-[#355443] hover:border-[#1F5A3B]'
+            }`}
+            title={showMap ? 'Hide map' : 'Show map'}
+          >
+            <Map className="h-3.5 w-3.5" />
+            <span>{showMap ? 'Hide Map' : 'Show Map'}</span>
+          </button>
+        )}
 
       </div>
 

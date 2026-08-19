@@ -10,6 +10,13 @@ export async function GET(request: NextRequest) {
     const stateId = searchParams.get("stateId");
     const cityId = searchParams.get("cityId");
     const q = searchParams.get("q");
+    const latParam = searchParams.get("lat");
+    const lngParam = searchParams.get("lng");
+    const radiusParam = searchParams.get("radius");
+
+    const lat = latParam ? parseFloat(latParam) : null;
+    const lng = lngParam ? parseFloat(lngParam) : null;
+    const radius = radiusParam ? parseFloat(radiusParam) : null;
 
     const { data, count } = await fetchMasjidsFromApi({
       page,
@@ -18,6 +25,9 @@ export async function GET(request: NextRequest) {
       stateId,
       cityId,
       q,
+      lat,
+      lng,
+      radius,
     });
 
     return NextResponse.json({ page, limit, data, count });

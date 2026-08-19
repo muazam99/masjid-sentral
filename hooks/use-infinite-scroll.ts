@@ -49,7 +49,6 @@ export function useInfiniteScroll<T>(
   }, [fetchMoreItems])
 
   const refresh = useCallback(async () => {
-    setItems([])
     setPage(1)
     setHasMore(true)
     setLoading(true)

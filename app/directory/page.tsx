@@ -20,46 +20,56 @@ type MosqueApiResponse = {
   error?: string
 }
 
+type MapArea = {
+  lat: number
+  lng: number
+  radius: number
+}
+
 export default function DirectoryPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [sortBy, setSortBy] = useState<string>('default')
+  const [showMap, setShowMap] = useState<boolean>(true)
+  const mapAreaRef = useRef<MapArea | null>(null)
 
   const { countryId, stateId, cityId, searchText, searchTrigger, totalCount, setTotalCount } =
     useMosqueFilter()
 
+  // Clean up any stale localStorage keys from previous sessions on mount
+  useEffect(() => {
+    try {
+      const keysToRemove: string[] = []
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i)
+        if (key && key.startsWith('mosques_')) {
+          keysToRemove.push(key)
+        }
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k))
+    } catch {
+      // ignore
+    }
+  }, [])
+
   const fetchMosques = useCallback(
     async (page: number): Promise<MosqueView[]> => {
-      const cacheKey = `mosques_${countryId}_${stateId}_${cityId}_${searchText}_${page}`
-      const cachedData = localStorage.getItem(cacheKey)
-
-      if (cachedData) {
-        try {
-          const { timestamp, data, count } = JSON.parse(cachedData)
-          const isStale =
-            Array.isArray(data) &&
-            data.some((item: MosqueView) => item.state_name?.startsWith('my-'))
-
-          if (!isStale && Date.now() - timestamp < 3600000 && Array.isArray(data) && data.length > 0) {
-            if (page === 1 && typeof count === 'number') {
-              setTotalCount(count)
-            }
-            return data
-          }
-        } catch {
-          // ignore cache parse error
-        }
-        localStorage.removeItem(cacheKey)
-      }
+      const currentArea = mapAreaRef.current
 
       try {
         const params = new URLSearchParams()
         params.set('page', page.toString())
         params.set('limit', '24')
 
-        if (countryId) params.set('countryId', countryId)
-        if (stateId) params.set('stateId', stateId)
-        if (cityId) params.set('cityId', cityId)
-        if (searchText) params.set('q', searchText)
+        if (currentArea) {
+          params.set('lat', currentArea.lat.toString())
+          params.set('lng', currentArea.lng.toString())
+          params.set('radius', currentArea.radius.toString())
+        } else {
+          if (countryId) params.set('countryId', countryId)
+          if (stateId && stateId !== 'all') params.set('stateId', stateId)
+          if (cityId && cityId !== 'all') params.set('cityId', cityId)
+          if (searchText) params.set('q', searchText)
+        }
 
         const response = await fetch(`/api/mosque?${params.toString()}`)
         const data = (await response.json()) as MosqueApiResponse
@@ -71,17 +81,6 @@ export default function DirectoryPage() {
         const items = Array.isArray(data.data) ? data.data : []
         if (page === 1) {
           setTotalCount(typeof data.count === 'number' ? data.count : items.length)
-        }
-
-        if (items.length > 0) {
-          localStorage.setItem(
-            cacheKey,
-            JSON.stringify({
-              timestamp: Date.now(),
-              data: items,
-              count: data.count,
-            })
-          )
         }
 
         return items
@@ -104,9 +103,29 @@ export default function DirectoryPage() {
   useEffect(() => {
     if (searchTrigger !== lastSearchTrigger.current) {
       lastSearchTrigger.current = searchTrigger
+      mapAreaRef.current = null
       refresh()
     }
   }, [searchTrigger, refresh])
+
+  const handleMapSearchArea = useCallback(
+    (center: { lat: number; lng: number }, radius: number) => {
+      mapAreaRef.current = { lat: center.lat, lng: center.lng, radius }
+      refresh()
+    },
+    [refresh]
+  )
+
+  const handleToggleShowMap = useCallback(() => {
+    setShowMap((prev) => {
+      const next = !prev
+      if (!next && mapAreaRef.current) {
+        mapAreaRef.current = null
+        refresh()
+      }
+      return next
+    })
+  }, [refresh])
 
   const displayMosques = [...mosques].sort((a, b) => {
     if (sortBy === 'name') {
@@ -125,19 +144,21 @@ export default function DirectoryPage() {
         {/* Directory Search & Filter Panel */}
         <DirectorySearchPanel />
 
-        {/* Split Layout: Results Column (7 Cols) + Sticky Map Column (5 Cols) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Split Layout: Results Column + Sticky Map Column */}
+        <div className={`grid grid-cols-1 ${showMap ? 'lg:grid-cols-12 gap-6' : ''} items-start`}>
           
-          {/* Left Results Column */}
-          <div className="lg:col-span-7 space-y-4">
+          {/* Results Column */}
+          <div className={`${showMap ? 'lg:col-span-7' : 'lg:col-span-12'} space-y-4`}>
             
-            {/* Results Header Toolbar (Count on Left, Sort + View Mode Toggle on Right) */}
+            {/* Results Header Toolbar (Count on Left, Sort + View Mode + Map Toggle on Right) */}
             <DirectoryToolbar
               count={totalCount ?? displayMosques.length}
               viewMode={viewMode}
               onViewModeChange={setViewMode}
               sortBy={sortBy}
               onSortChange={setSortBy}
+              showMap={showMap}
+              onToggleShowMap={handleToggleShowMap}
             />
 
             {/* Cards View */}
@@ -153,7 +174,7 @@ export default function DirectoryPage() {
                 </p>
               </div>
             ) : viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className={`grid grid-cols-1 sm:grid-cols-2 ${showMap ? '' : 'md:grid-cols-3 xl:grid-cols-4'} gap-4`}>
                 {displayMosques.map((m) => {
                   const imageUrl = getR2ImageUrl(m.image_path)
                   return (
@@ -191,9 +212,17 @@ export default function DirectoryPage() {
           </div>
 
           {/* Sticky Interactive Map Column */}
-          <div className="hidden lg:block lg:col-span-5 sticky top-20">
-            <DirectoryMap mosques={displayMosques} height="650px" />
-          </div>
+          {showMap && (
+            <div className="hidden lg:block lg:col-span-5 sticky top-20">
+              <DirectoryMap
+                mosques={displayMosques}
+                height="650px"
+                isLoading={loading}
+                onSearchArea={handleMapSearchArea}
+                resetRecenterTrigger={searchTrigger}
+              />
+            </div>
+          )}
 
         </div>
 

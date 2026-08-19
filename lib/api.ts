@@ -145,18 +145,41 @@ export async function fetchMasjidsFromApi(options: {
   type?: string | null;
   jumaat?: boolean | null;
   q?: string | null;
+  lat?: number | null;
+  lng?: number | null;
+  radius?: number | null;
 }): Promise<{ data: MosqueView[]; count: number }> {
   const baseUrl = getApiBaseUrl();
   const params = new URLSearchParams();
 
-  if (options.page) params.set("page", options.page.toString());
-  if (options.stateId) params.set("state", options.stateId);
-  if (options.cityId) params.set("city", options.cityId);
-  if (options.type) params.set("type", options.type);
-  if (options.jumaat) params.set("jumaat", "1");
-  if (options.q) params.set("q", options.q);
+  // If lat & lng are specified, query the nearby endpoint
+  const isNearbyQuery =
+    typeof options.lat === 'number' &&
+    typeof options.lng === 'number' &&
+    !isNaN(options.lat) &&
+    !isNaN(options.lng);
 
-  const res = await fetch(`${baseUrl}/masjids?${params.toString()}`, {
+  let endpoint = '/masjids';
+
+  if (isNearbyQuery) {
+    endpoint = '/masjids/nearby';
+    params.set('lat', options.lat!.toString());
+    params.set('lng', options.lng!.toString());
+    if (options.radius) {
+      params.set('radius', Math.min(20, Math.max(1, options.radius)).toString());
+    }
+  } else {
+    if (options.page) params.set("page", options.page.toString());
+    if (options.limit) params.set("limit", options.limit.toString());
+    if (options.countryId && options.countryId !== 'all') params.set("country", options.countryId);
+    if (options.stateId && options.stateId !== 'all') params.set("state", options.stateId);
+    if (options.cityId && options.cityId !== 'all') params.set("city", options.cityId);
+    if (options.type) params.set("type", options.type);
+    if (options.jumaat) params.set("jumaat", "1");
+    if (options.q) params.set("q", options.q);
+  }
+
+  const res = await fetch(`${baseUrl}${endpoint}?${params.toString()}`, {
     next: { revalidate: 60 },
   });
 
