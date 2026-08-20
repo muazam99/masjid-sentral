@@ -360,6 +360,80 @@ export function calculateDistanceKm(
   return R * c;
 }
 
+// ─── Admin: Create Masjid ──────────────────────────────────────────────────
+
+export type CreateMasjidPayload = {
+  name: string;
+  type_id: string;
+  state_id: string;
+  country_id: string;
+  lat: number;
+  lng: number;
+  address: string;
+  source: string;
+  city_id?: string | null;
+  description?: string | null;
+  telephone?: string | null;
+  email?: string | null;
+  google_url?: string | null;
+  jumaat_available?: boolean;
+  facilities?: string[];
+  contacts?: { type: string; value: string }[];
+  images?: { path: string; is_thumbnail: boolean; sort_order: number }[];
+  sedekah?: {
+    enabled: boolean;
+    qr_image_path?: string | null;
+    qr_content?: string | null;
+    payment_label?: string | null;
+    instructions?: string | null;
+  };
+  organization_contacts?: {
+    role: string;
+    description?: string | null;
+    parent_ref?: number | null;
+    sort_order?: number;
+  }[];
+};
+
+export async function createMasjid(payload: CreateMasjidPayload): Promise<{ id: number }> {
+  const res = await fetch("/api/admin/masjid", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const body = (await res.json().catch(() => null)) as { id?: number; error?: string } | null;
+  if (!res.ok || !body?.id) {
+    throw new Error(body?.error || `Failed to create masjid (${res.status})`);
+  }
+  return { id: body.id };
+}
+
+export async function requestImageUploadUrl(): Promise<{ id: string; uploadURL: string }> {
+  const res = await fetch("/api/admin/images/upload-url", { method: "POST" });
+  const body = (await res.json().catch(() => null)) as
+    | { id?: string; uploadURL?: string; error?: string }
+    | null;
+  if (!res.ok || !body?.id || !body?.uploadURL) {
+    throw new Error(body?.error || `Failed to get an upload URL (${res.status})`);
+  }
+  return { id: body.id, uploadURL: body.uploadURL };
+}
+
+// Uploads a file straight to Cloudflare Images using a direct-upload URL, and returns the
+// image id to store as `path` in masjid_images / masjid_sedekah.qr_image_path.
+export async function uploadImageFile(file: File): Promise<string> {
+  const { id, uploadURL } = await requestImageUploadUrl();
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const uploadRes = await fetch(uploadURL, { method: "POST", body: formData });
+  if (!uploadRes.ok) {
+    throw new Error(`Image upload failed (${uploadRes.status})`);
+  }
+  return id;
+}
+
 export function formatDistance(km: number): string {
   if (km < 1) {
     return `${Math.round(km * 1000)} m`;
