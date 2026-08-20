@@ -46552,6 +46552,1306 @@
           "height": 12
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "ITj0S",
+      "x": 1520,
+      "y": 11940,
+      "name": "Login Page",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$ms-color-surface-muted",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "Dv6eG",
+          "name": "Login Header",
+          "width": "fill_container",
+          "height": 88,
+          "fill": "$ms-color-code",
+          "padding": [
+            16,
+            80
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "zQSzm",
+              "name": "Login Navigation",
+              "width": "fill_container",
+              "height": 56,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "rbmnD",
+                  "name": "Login Header Brand",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "QNN0f",
+                      "name": "Login Logo Mark",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "$ms-color-primary",
+                      "cornerRadius": "$ms-radius-md",
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "d3hYvn",
+                          "name": "Login Logo Icon",
+                          "width": 24,
+                          "height": 24,
+                          "icon": "landmark",
+                          "library": "lucide",
+                          "fill": "$ms-color-primary-foreground"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Kevl7",
+                      "name": "Login Brand Name",
+                      "fill": "$ms-color-primary-foreground",
+                      "content": "Masjid Sentral",
+                      "fontFamily": "$ms-font-heading",
+                      "fontSize": "$ms-text-xl",
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "s4DAIp",
+                  "name": "Login Header Links",
+                  "gap": 28,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ml1ah",
+                      "name": "Login Directory Link",
+                      "fill": "#DDE9DEFF",
+                      "content": "Directory",
+                      "fontFamily": "$ms-font-sans",
+                      "fontSize": "$ms-text-sm",
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "ImuTb",
+                      "name": "Login API Link",
+                      "fill": "#DDE9DEFF",
+                      "content": "API",
+                      "fontFamily": "$ms-font-sans",
+                      "fontSize": "$ms-text-sm",
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "DeFmj",
+                      "name": "Login Submit Link",
+                      "fill": "#DDE9DEFF",
+                      "content": "Submit",
+                      "fontFamily": "$ms-font-sans",
+                      "fontSize": "$ms-text-sm",
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "e0TtXE",
+                  "name": "Back To Home Button",
+                  "height": 40,
+                  "fill": "#00000000",
+                  "cornerRadius": "$ms-radius-md",
+                  "stroke": "#DDE9DEFF",
+                  "strokeWidth": 1,
+                  "padding": [
+                    0,
+                    16
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "bfSoz",
+                      "name": "Back To Home Label",
+                      "fill": "$ms-color-primary-foreground",
+                      "content": "Back to home",
+                      "fontFamily": "$ms-font-sans",
+                      "fontSize": "$ms-text-sm",
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "CqjPw",
+          "name": "Login Body",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "AZRNk",
+              "name": "Login Card",
+              "clip": true,
+              "width": 900,
+              "height": 620,
+              "cornerRadius": "$ms-radius-lg",
+              "stroke": "$ms-color-border",
+              "strokeWidth": 1,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0000002A",
+                "offset": {
+                  "x": 0,
+                  "y": 12
+                },
+                "blur": 40,
+                "spread": -4
+              },
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "cZ6h3",
+                  "name": "Login Image Panel",
+                  "metadata": {
+                    "type": "unsplash",
+                    "username": "aayush_khokhar",
+                    "link": "https://unsplash.com/@aayush_khokhar",
+                    "author": "Aayush Khokhar"
+                  },
+                  "width": 380,
+                  "height": "fill_container",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "https://images.unsplash.com/photo-1695302932255-8637a411e875?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODcxOTU5ODZ8&ixlib=rb-4.1.0&q=80&w=1080",
+                    "mode": "fill"
+                  },
+                  "layout": "vertical",
+                  "padding": 40,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "uu1lp",
+                      "name": "Login Panel Brand",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "vQFZJ",
+                          "name": "Logo Mark",
+                          "width": 40,
+                          "height": 40,
+                          "fill": "$ms-color-primary",
+                          "cornerRadius": "$ms-radius-md",
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "tnALP",
+                              "x": 8,
+                              "y": 8,
+                              "name": "Logo Icon",
+                              "width": 24,
+                              "height": 24,
+                              "icon": "landmark",
+                              "library": "lucide",
+                              "fill": "$ms-color-primary-foreground"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "TvjML",
+                          "name": "Brand Name",
+                          "fill": "$ms-color-primary-foreground",
+                          "content": "Masjid Sentral",
+                          "fontFamily": "$ms-font-heading",
+                          "fontSize": "$ms-text-xl",
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "WCN9k",
+                      "name": "Login Panel Quote",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "q7HB9V",
+                          "name": "Login Panel Headline",
+                          "fill": "$ms-color-primary-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": 300,
+                          "content": "One shared record for every mosque app.",
+                          "lineHeight": "$ms-leading-tight",
+                          "fontFamily": "$ms-font-heading",
+                          "fontSize": "$ms-text-2xl",
+                          "fontWeight": "720"
+                        },
+                        {
+                          "type": "text",
+                          "id": "I5Z0q",
+                          "name": "Login Panel Caption",
+                          "fill": "#DDE9DEFF",
+                          "textGrowth": "fixed-width",
+                          "width": 300,
+                          "content": "Sign in to manage masjid listings, review submissions, and access the directory API.",
+                          "lineHeight": "$ms-leading-normal",
+                          "fontFamily": "$ms-font-sans",
+                          "fontSize": "$ms-text-sm",
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Dyi3I",
+                  "name": "Login Form Panel",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "$ms-color-background",
+                  "layout": "vertical",
+                  "padding": 48,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "TIm87",
+                      "name": "Login Form Card",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 24,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "zBVY5",
+                          "name": "Login Form Header",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "gzsH5",
+                              "name": "Login Title",
+                              "fill": "$ms-color-foreground",
+                              "content": "Welcome back",
+                              "fontFamily": "$ms-font-heading",
+                              "fontSize": "$ms-text-3xl",
+                              "fontWeight": "720"
+                            },
+                            {
+                              "type": "text",
+                              "id": "LdwPT",
+                              "name": "Login Subtitle",
+                              "fill": "$ms-color-muted-foreground",
+                              "content": "Sign in to your Masjid Sentral account.",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-sm",
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "q4lbwS",
+                          "name": "Email Field",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 7,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "ukane",
+                              "name": "Email Label",
+                              "fill": "$ms-color-foreground",
+                              "content": "Email",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-sm",
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "EW4jO",
+                              "name": "Email Input",
+                              "width": "fill_container",
+                              "height": 44,
+                              "fill": "$ms-color-surface",
+                              "cornerRadius": "$ms-radius-md",
+                              "stroke": "$ms-color-border",
+                              "strokeWidth": 1,
+                              "padding": [
+                                0,
+                                13
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "h1nmq",
+                                  "name": "Email Value",
+                                  "fill": "$ms-color-muted-foreground",
+                                  "content": "you@example.com",
+                                  "fontFamily": "$ms-font-sans",
+                                  "fontSize": "$ms-text-sm",
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "xqRmJ",
+                          "name": "Password Field",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 7,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "I7BFmQ",
+                              "name": "Password Label Row",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "tyXFh",
+                                  "name": "Password Label",
+                                  "fill": "$ms-color-foreground",
+                                  "content": "Password",
+                                  "fontFamily": "$ms-font-sans",
+                                  "fontSize": "$ms-text-sm",
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "JcY23",
+                                  "name": "Forgot Password Link",
+                                  "fill": "$ms-color-primary",
+                                  "content": "Forgot password?",
+                                  "fontFamily": "$ms-font-sans",
+                                  "fontSize": "$ms-text-xs",
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "P4dkeS",
+                              "name": "Password Input",
+                              "width": "fill_container",
+                              "height": 44,
+                              "fill": "$ms-color-surface",
+                              "cornerRadius": "$ms-radius-md",
+                              "stroke": "$ms-color-border",
+                              "strokeWidth": 1,
+                              "padding": [
+                                0,
+                                13
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "eHVMk",
+                                  "name": "Password Value",
+                                  "fill": "$ms-color-muted-foreground",
+                                  "content": "••••••••",
+                                  "fontFamily": "$ms-font-sans",
+                                  "fontSize": "$ms-text-sm",
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "M6dh9",
+                          "name": "Sign In Button",
+                          "width": "fill_container",
+                          "height": 48,
+                          "fill": "$ms-color-primary",
+                          "cornerRadius": "$ms-radius-md",
+                          "gap": 10,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "zC9KV",
+                              "name": "Sign In Label",
+                              "fill": "$ms-color-primary-foreground",
+                              "content": "Sign in",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-base",
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "x0o6kx",
+                          "name": "Divider Row",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "id": "qzZOr",
+                              "name": "Divider Line Left",
+                              "fill": "$ms-color-border",
+                              "width": "fill_container",
+                              "height": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "tGkEn",
+                              "name": "Divider Label",
+                              "fill": "$ms-color-muted-foreground",
+                              "content": "or",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-xs",
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "rectangle",
+                              "id": "qRqcy",
+                              "name": "Divider Line Right",
+                              "fill": "$ms-color-border",
+                              "width": "fill_container",
+                              "height": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "L4PeR9",
+                          "name": "Continue With Google Button",
+                          "width": "fill_container",
+                          "height": 48,
+                          "fill": "#00000000",
+                          "cornerRadius": "$ms-radius-md",
+                          "stroke": "$ms-color-border",
+                          "strokeWidth": 1,
+                          "gap": 10,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "hHRlZ",
+                              "name": "Google Icon Placeholder",
+                              "clip": true,
+                              "width": 18,
+                              "height": 18,
+                              "layout": "none",
+                              "children": [
+                                {
+                                  "type": "path",
+                                  "id": "ptX4K",
+                                  "x": 9.1004,
+                                  "y": 7.8644,
+                                  "geometry": "M7.33906 1.39056c0-0.46352-0.0309-0.94249-0.12361-1.39056l-7.21545 0 0 2.82747 4.24893 0c-0.16996 0.75708-0.72618 1.56052-1.54507 2.20944l2.3794 1.82318c1.40601-1.29786 2.25579-3.21373 2.2558-5.46953z",
+                                  "fill": "#448AF4",
+                                  "width": 7.3391,
+                                  "height": 6.8601
+                                },
+                                {
+                                  "type": "path",
+                                  "id": "m7qH87",
+                                  "x": 2.3794,
+                                  "y": 10.4755,
+                                  "geometry": "M6.78283 6.11846c1.77682 0 3.26009-0.55622 4.37254-1.43691l0.64892-0.43262-2.3794-1.82318c-0.61803 0.40172-1.45236 0.77253-2.64206 0.77253-1.74592 0-3.24464-1.01974-3.90901-2.42575l-0.46352-0.77253-2.4103 1.93133c1.1279 2.25579 3.29099 4.18712 6.78283 4.18713z",
+                                  "fill": "#3BAA5C",
+                                  "width": 11.8043,
+                                  "height": 6.1185
+                                },
+                                {
+                                  "type": "path",
+                                  "id": "WqNIB",
+                                  "x": 1.576,
+                                  "y": 5.5313,
+                                  "geometry": "M3.22918 4.95966c-0.18541-0.47897-0.23176-0.98884-0.23175-1.48326 0-0.44807 0.07725-0.86524 0.23175-1.45237l0-0.0618-2.4721-1.96223-0.21631 0.49442c-0.32446 0.81888-0.54077 1.94678-0.54077 2.98198 0 1.03519 0.26266 2.08584 0.80343 3.39914l2.42575-1.91588z",
+                                  "fill": "#F7BB06",
+                                  "width": 3.2292,
+                                  "height": 6.8755
+                                },
+                                {
+                                  "type": "path",
+                                  "id": "sQ55E",
+                                  "x": 2.333,
+                                  "y": 1.3751,
+                                  "geometry": "M6.82918 2.99743c1.097 0 2.03948 0.32446 3.04378 1.12789l2.19399-2.03948c-1.1588-1.097-2.81202-2.08584-5.23776-2.08584-2.81202 0-5.45408 1.59142-6.82919 4.15622l2.4721 1.99314c0.54077-1.49871 1.99313-3.15193 4.35708-3.15193z",
+                                  "fill": "#448AF4",
+                                  "width": 12.067,
+                                  "height": 6.1494
+                                },
+                                {
+                                  "type": "path",
+                                  "id": "v1d6G",
+                                  "x": 10.63,
+                                  "y": 1.8695,
+                                  "geometry": "M0 2.71931c0.55622 0.16996 1.1279 0.50987 1.56051 0.89614l2.20945-2.03948c-0.58712-0.57167-1.26695-1.06609-2.48756-1.57597l-1.2824 2.71931z",
+                                  "fill": "#E84A34",
+                                  "width": 3.77,
+                                  "height": 3.6155
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "o8ltTd",
+                              "name": "Continue With Google Label",
+                              "fill": "$ms-color-foreground",
+                              "content": "Continue with Google",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-base",
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "UlMe1",
+                          "name": "Signup Footer Row",
+                          "width": "fill_container",
+                          "gap": 6,
+                          "justifyContent": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "W6uga",
+                              "name": "Signup Footer Copy",
+                              "fill": "$ms-color-muted-foreground",
+                              "content": "Don't have an account?",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-sm",
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "u9C0yN",
+                              "name": "Signup Footer Link",
+                              "fill": "$ms-color-primary",
+                              "content": "Sign up",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-sm",
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "rfNzI",
+      "x": 3040,
+      "y": 11940,
+      "name": "Sign Up Page",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$ms-color-surface-muted",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "KcO35",
+          "name": "Sign Up Header",
+          "width": "fill_container",
+          "height": 88,
+          "fill": "$ms-color-code",
+          "padding": [
+            16,
+            80
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "RHlmw",
+              "name": "Sign Up Navigation",
+              "width": "fill_container",
+              "height": 56,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ay2UF",
+                  "name": "Sign Up Header Brand",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "lHNeo",
+                      "name": "Sign Up Logo Mark",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "$ms-color-primary",
+                      "cornerRadius": "$ms-radius-md",
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "E4Ktp",
+                          "name": "Sign Up Logo Icon",
+                          "width": 24,
+                          "height": 24,
+                          "icon": "landmark",
+                          "library": "lucide",
+                          "fill": "$ms-color-primary-foreground"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "DBxGN",
+                      "name": "Sign Up Brand Name",
+                      "fill": "$ms-color-primary-foreground",
+                      "content": "Masjid Sentral",
+                      "fontFamily": "$ms-font-heading",
+                      "fontSize": "$ms-text-xl",
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "tWOXJ",
+                  "name": "Sign Up Header Links",
+                  "gap": 28,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "x42hT",
+                      "name": "Sign Up Directory Link",
+                      "fill": "#DDE9DEFF",
+                      "content": "Directory",
+                      "fontFamily": "$ms-font-sans",
+                      "fontSize": "$ms-text-sm",
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "YOdpp",
+                      "name": "Sign Up API Link",
+                      "fill": "#DDE9DEFF",
+                      "content": "API",
+                      "fontFamily": "$ms-font-sans",
+                      "fontSize": "$ms-text-sm",
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "vHalr",
+                      "name": "Sign Up Submit Link",
+                      "fill": "#DDE9DEFF",
+                      "content": "Submit",
+                      "fontFamily": "$ms-font-sans",
+                      "fontSize": "$ms-text-sm",
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "B6sTm",
+                  "name": "Back To Home Button",
+                  "height": 40,
+                  "fill": "#00000000",
+                  "cornerRadius": "$ms-radius-md",
+                  "stroke": "#DDE9DEFF",
+                  "strokeWidth": 1,
+                  "padding": [
+                    0,
+                    16
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "X4lET",
+                      "name": "Back To Home Label",
+                      "fill": "$ms-color-primary-foreground",
+                      "content": "Back to home",
+                      "fontFamily": "$ms-font-sans",
+                      "fontSize": "$ms-text-sm",
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "lAtx2",
+          "name": "Sign Up Body",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "cJYBw",
+              "name": "Sign Up Card",
+              "clip": true,
+              "width": 900,
+              "height": 620,
+              "cornerRadius": "$ms-radius-lg",
+              "stroke": "$ms-color-border",
+              "strokeWidth": 1,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0000002A",
+                "offset": {
+                  "x": 0,
+                  "y": 12
+                },
+                "blur": 40,
+                "spread": -4
+              },
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "DpURx",
+                  "name": "Sign Up Image Panel",
+                  "metadata": {
+                    "type": "unsplash",
+                    "username": "aayush_khokhar",
+                    "link": "https://unsplash.com/@aayush_khokhar",
+                    "author": "Aayush Khokhar"
+                  },
+                  "width": 380,
+                  "height": "fill_container",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "https://images.unsplash.com/photo-1695302932255-8637a411e875?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODcxOTU5ODZ8&ixlib=rb-4.1.0&q=80&w=1080",
+                    "mode": "fill"
+                  },
+                  "layout": "vertical",
+                  "padding": 40,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "LBSHC",
+                      "name": "Sign Up Panel Brand",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "N1VViv",
+                          "name": "Logo Mark",
+                          "width": 40,
+                          "height": 40,
+                          "fill": "$ms-color-primary",
+                          "cornerRadius": "$ms-radius-md",
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "Y4o5f4",
+                              "x": 8,
+                              "y": 8,
+                              "name": "Logo Icon",
+                              "width": 24,
+                              "height": 24,
+                              "icon": "landmark",
+                              "library": "lucide",
+                              "fill": "$ms-color-primary-foreground"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "zrizK",
+                          "name": "Brand Name",
+                          "fill": "$ms-color-primary-foreground",
+                          "content": "Masjid Sentral",
+                          "fontFamily": "$ms-font-heading",
+                          "fontSize": "$ms-text-xl",
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "sfjqB",
+                      "name": "Sign Up Panel Quote",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "PVF4P",
+                          "name": "Sign Up Panel Headline",
+                          "fill": "$ms-color-primary-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": 300,
+                          "content": "Join every mosque on one record.",
+                          "lineHeight": "$ms-leading-tight",
+                          "fontFamily": "$ms-font-heading",
+                          "fontSize": "$ms-text-2xl",
+                          "fontWeight": "720"
+                        },
+                        {
+                          "type": "text",
+                          "id": "O7cV6G",
+                          "name": "Sign Up Panel Caption",
+                          "fill": "#DDE9DEFF",
+                          "textGrowth": "fixed-width",
+                          "width": 300,
+                          "content": "Create an account to submit listings, verify records, and access the directory API.",
+                          "lineHeight": "$ms-leading-normal",
+                          "fontFamily": "$ms-font-sans",
+                          "fontSize": "$ms-text-sm",
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iSQIB",
+                  "name": "Sign Up Form Panel",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "$ms-color-background",
+                  "layout": "vertical",
+                  "padding": 48,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "bXFcC",
+                      "name": "Sign Up Form Card",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 24,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "NYH41",
+                          "name": "Sign Up Form Header",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "i514hW",
+                              "name": "Sign Up Title",
+                              "fill": "$ms-color-foreground",
+                              "content": "Create your account",
+                              "fontFamily": "$ms-font-heading",
+                              "fontSize": "$ms-text-3xl",
+                              "fontWeight": "720"
+                            },
+                            {
+                              "type": "text",
+                              "id": "MeQQY",
+                              "name": "Sign Up Subtitle",
+                              "fill": "$ms-color-muted-foreground",
+                              "content": "Join Masjid Sentral to manage listings and API access.",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-sm",
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "qU1hc",
+                          "name": "Name Field",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 7,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "LYUdG",
+                              "name": "Name Label",
+                              "fill": "$ms-color-foreground",
+                              "content": "Full name",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-sm",
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Kd6ee",
+                              "name": "Name Input",
+                              "width": "fill_container",
+                              "height": 44,
+                              "fill": "$ms-color-surface",
+                              "cornerRadius": "$ms-radius-md",
+                              "stroke": "$ms-color-border",
+                              "strokeWidth": 1,
+                              "padding": [
+                                0,
+                                13
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "g3NESz",
+                                  "name": "Name Value",
+                                  "fill": "$ms-color-muted-foreground",
+                                  "content": "Your full name",
+                                  "fontFamily": "$ms-font-sans",
+                                  "fontSize": "$ms-text-sm",
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "qbTLR",
+                          "name": "Email Field",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 7,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "PySXY",
+                              "name": "Email Label",
+                              "fill": "$ms-color-foreground",
+                              "content": "Email",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-sm",
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "H97Z7g",
+                              "name": "Email Input",
+                              "width": "fill_container",
+                              "height": 44,
+                              "fill": "$ms-color-surface",
+                              "cornerRadius": "$ms-radius-md",
+                              "stroke": "$ms-color-border",
+                              "strokeWidth": 1,
+                              "padding": [
+                                0,
+                                13
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "YboAY",
+                                  "name": "Email Value",
+                                  "fill": "$ms-color-muted-foreground",
+                                  "content": "you@example.com",
+                                  "fontFamily": "$ms-font-sans",
+                                  "fontSize": "$ms-text-sm",
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "EOMin",
+                          "name": "Password Field",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 7,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "lZris",
+                              "name": "Password Label",
+                              "fill": "$ms-color-foreground",
+                              "content": "Password",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-sm",
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "dHNkX",
+                              "name": "Password Input",
+                              "width": "fill_container",
+                              "height": 44,
+                              "fill": "$ms-color-surface",
+                              "cornerRadius": "$ms-radius-md",
+                              "stroke": "$ms-color-border",
+                              "strokeWidth": 1,
+                              "padding": [
+                                0,
+                                13
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "rCbQn",
+                                  "name": "Password Value",
+                                  "fill": "$ms-color-muted-foreground",
+                                  "content": "••••••••",
+                                  "fontFamily": "$ms-font-sans",
+                                  "fontSize": "$ms-text-sm",
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Bn6c2",
+                          "name": "Create Account Button",
+                          "width": "fill_container",
+                          "height": 48,
+                          "fill": "$ms-color-primary",
+                          "cornerRadius": "$ms-radius-md",
+                          "gap": 10,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "gOjkr",
+                              "name": "Create Account Label",
+                              "fill": "$ms-color-primary-foreground",
+                              "content": "Create account",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-base",
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "whY6N",
+                          "name": "Divider Row",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "id": "b60hHu",
+                              "name": "Divider Line Left",
+                              "fill": "$ms-color-border",
+                              "width": "fill_container",
+                              "height": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "bnngW",
+                              "name": "Divider Label",
+                              "fill": "$ms-color-muted-foreground",
+                              "content": "or",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-xs",
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "rectangle",
+                              "id": "t0lQyv",
+                              "name": "Divider Line Right",
+                              "fill": "$ms-color-border",
+                              "width": "fill_container",
+                              "height": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "bNCmY",
+                          "name": "Continue With Google Button",
+                          "width": "fill_container",
+                          "height": 48,
+                          "fill": "#00000000",
+                          "cornerRadius": "$ms-radius-md",
+                          "stroke": "$ms-color-border",
+                          "strokeWidth": 1,
+                          "gap": 10,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "BOMzB",
+                              "name": "Google Icon Placeholder",
+                              "clip": true,
+                              "width": 18,
+                              "height": 18,
+                              "layout": "none",
+                              "children": [
+                                {
+                                  "type": "path",
+                                  "id": "O7Heu0",
+                                  "x": 9.1004,
+                                  "y": 7.8644,
+                                  "geometry": "M7.33906 1.39056c0-0.46352-0.0309-0.94249-0.12361-1.39056l-7.21545 0 0 2.82747 4.24893 0c-0.16996 0.75708-0.72618 1.56052-1.54507 2.20944l2.3794 1.82318c1.40601-1.29786 2.25579-3.21373 2.2558-5.46953z",
+                                  "fill": "#448AF4",
+                                  "width": 7.3391,
+                                  "height": 6.8601
+                                },
+                                {
+                                  "type": "path",
+                                  "id": "cD3Ru",
+                                  "x": 2.3794,
+                                  "y": 10.4755,
+                                  "geometry": "M6.78283 6.11846c1.77682 0 3.26009-0.55622 4.37254-1.43691l0.64892-0.43262-2.3794-1.82318c-0.61803 0.40172-1.45236 0.77253-2.64206 0.77253-1.74592 0-3.24464-1.01974-3.90901-2.42575l-0.46352-0.77253-2.4103 1.93133c1.1279 2.25579 3.29099 4.18712 6.78283 4.18713z",
+                                  "fill": "#3BAA5C",
+                                  "width": 11.8043,
+                                  "height": 6.1185
+                                },
+                                {
+                                  "type": "path",
+                                  "id": "Gi0NC",
+                                  "x": 1.576,
+                                  "y": 5.5313,
+                                  "geometry": "M3.22918 4.95966c-0.18541-0.47897-0.23176-0.98884-0.23175-1.48326 0-0.44807 0.07725-0.86524 0.23175-1.45237l0-0.0618-2.4721-1.96223-0.21631 0.49442c-0.32446 0.81888-0.54077 1.94678-0.54077 2.98198 0 1.03519 0.26266 2.08584 0.80343 3.39914l2.42575-1.91588z",
+                                  "fill": "#F7BB06",
+                                  "width": 3.2292,
+                                  "height": 6.8755
+                                },
+                                {
+                                  "type": "path",
+                                  "id": "m2hXj",
+                                  "x": 2.333,
+                                  "y": 1.3751,
+                                  "geometry": "M6.82918 2.99743c1.097 0 2.03948 0.32446 3.04378 1.12789l2.19399-2.03948c-1.1588-1.097-2.81202-2.08584-5.23776-2.08584-2.81202 0-5.45408 1.59142-6.82919 4.15622l2.4721 1.99314c0.54077-1.49871 1.99313-3.15193 4.35708-3.15193z",
+                                  "fill": "#448AF4",
+                                  "width": 12.067,
+                                  "height": 6.1494
+                                },
+                                {
+                                  "type": "path",
+                                  "id": "uRqVd",
+                                  "x": 10.63,
+                                  "y": 1.8695,
+                                  "geometry": "M0 2.71931c0.55622 0.16996 1.1279 0.50987 1.56051 0.89614l2.20945-2.03948c-0.58712-0.57167-1.26695-1.06609-2.48756-1.57597l-1.2824 2.71931z",
+                                  "fill": "#E84A34",
+                                  "width": 3.77,
+                                  "height": 3.6155
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "pBCPN",
+                              "name": "Continue With Google Label",
+                              "fill": "$ms-color-foreground",
+                              "content": "Continue with Google",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-base",
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "o8Sof",
+                          "name": "Signup Footer Row",
+                          "width": "fill_container",
+                          "gap": 6,
+                          "justifyContent": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "FB5e4",
+                              "name": "Signup Footer Copy",
+                              "fill": "$ms-color-muted-foreground",
+                              "content": "Already have an account?",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-sm",
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "TMMxX",
+                              "name": "Signup Footer Link",
+                              "fill": "$ms-color-primary",
+                              "content": "Sign in",
+                              "fontFamily": "$ms-font-sans",
+                              "fontSize": "$ms-text-sm",
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "themes": {

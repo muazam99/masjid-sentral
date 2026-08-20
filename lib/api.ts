@@ -1,4 +1,5 @@
 import { Mosque, MosqueView } from "@/types/Mosque";
+import { Submission } from "@/types/Submission";
 
 export function getApiBaseUrl(): string {
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -432,6 +433,72 @@ export async function uploadImageFile(file: File): Promise<string> {
     throw new Error(`Image upload failed (${uploadRes.status})`);
   }
   return id;
+}
+
+// ─── Submissions (user-submitted new masjids / edits, pending admin review) ─
+
+export async function submitMasjidCreate(payload: CreateMasjidPayload): Promise<Submission> {
+  const res = await fetch("/api/submissions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type: "create", payload }),
+  });
+  const body = (await res.json().catch(() => null)) as (Submission & { error?: undefined }) | { error?: string } | null;
+  if (!res.ok || !body) {
+    throw new Error((body as { error?: string } | null)?.error || `Failed to submit (${res.status})`);
+  }
+  return body as Submission;
+}
+
+export async function submitMasjidUpdate(
+  masjidId: number,
+  payload: Partial<CreateMasjidPayload>
+): Promise<Submission> {
+  const res = await fetch("/api/submissions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type: "update", masjid_id: masjidId, payload }),
+  });
+  const body = (await res.json().catch(() => null)) as (Submission & { error?: undefined }) | { error?: string } | null;
+  if (!res.ok || !body) {
+    throw new Error((body as { error?: string } | null)?.error || `Failed to submit (${res.status})`);
+  }
+  return body as Submission;
+}
+
+export async function fetchMySubmissions(): Promise<Submission[]> {
+  const res = await fetch("/api/submissions");
+  if (!res.ok) throw new Error(`Failed to load submissions (${res.status})`);
+  const body = (await res.json()) as { data: Submission[] };
+  return body.data ?? [];
+}
+
+export async function fetchAdminSubmissions(status?: string): Promise<Submission[]> {
+  const params = status ? `?status=${status}` : "";
+  const res = await fetch(`/api/admin/submissions${params}`);
+  if (!res.ok) throw new Error(`Failed to load submissions (${res.status})`);
+  const body = (await res.json()) as { data: Submission[] };
+  return body.data ?? [];
+}
+
+export async function approveSubmission(id: number): Promise<void> {
+  const res = await fetch(`/api/admin/submissions/${id}/approve`, { method: "POST" });
+  if (!res.ok) {
+    const body = (await res.json().catch(() => null)) as { error?: string } | null;
+    throw new Error(body?.error || `Failed to approve (${res.status})`);
+  }
+}
+
+export async function rejectSubmission(id: number, reviewNote: string): Promise<void> {
+  const res = await fetch(`/api/admin/submissions/${id}/reject`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ review_note: reviewNote }),
+  });
+  if (!res.ok) {
+    const body = (await res.json().catch(() => null)) as { error?: string } | null;
+    throw new Error(body?.error || `Failed to reject (${res.status})`);
+  }
 }
 
 export function formatDistance(km: number): string {

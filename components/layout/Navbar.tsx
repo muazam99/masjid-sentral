@@ -1,22 +1,38 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { Landmark, Menu, X, Terminal } from 'lucide-react'
+import { Landmark, Menu, X, Terminal, UserCircle } from 'lucide-react'
 import { ThemeToggle } from '../ThemeToggle'
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { useSession, signOut } from '@/lib/auth-client'
 
 export default function Navbar() {
   const pathname = usePathname()
+  const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { data: session } = useSession()
+  const user = session?.user as { name?: string | null; role?: string } | undefined
 
   const navLinks = [
     { label: 'Directory', href: '/directory' },
     { label: 'API Docs', href: '/docs' },
-    { label: 'Submit', href: '/#submission-flow' },
+    { label: 'Submit', href: user ? '/submit/masjid/new' : '/login?next=/submit/masjid/new' },
     { label: 'About Us', href: '/#narrative' },
   ]
+
+  async function handleLogout() {
+    await signOut()
+    router.refresh()
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#355443] bg-[#102319]/95 backdrop-blur-md text-white transition-colors">
@@ -64,6 +80,33 @@ export default function Navbar() {
               <span>Explore Masjids</span>
             </Button>
           </Link>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex h-9 w-9 items-center justify-center rounded-full border border-[#355443] bg-[#172D20] text-[#DDE9DE] hover:text-white">
+                  <UserCircle className="h-5 w-5" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link href="/submissions/mine">My submissions</Link>
+                </DropdownMenuItem>
+                {user.role === 'admin' && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/review/queue">Review queue</Link>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link href="/login">
+              <Button size="sm" variant="outline" className="border-[#355443] bg-transparent text-[#DDE9DE] hover:text-white">
+                Log in
+              </Button>
+            </Link>
+          )}
         </div>
 
         {/* Mobile menu trigger */}
@@ -94,13 +137,45 @@ export default function Navbar() {
               </Link>
             ))}
           </nav>
-          <div className="pt-2">
+          <div className="space-y-2 pt-2">
             <Link href="/directory" onClick={() => setMobileMenuOpen(false)}>
               <Button className="w-full bg-[#C7A34D] text-[#102319] font-bold gap-2">
                 <Terminal className="h-4 w-4" />
                 <span>Explore Masjids</span>
               </Button>
             </Link>
+            {user ? (
+              <>
+                <Link href="/submissions/mine" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full border-[#355443] bg-transparent text-[#DDE9DE]">
+                    My submissions
+                  </Button>
+                </Link>
+                {user.role === 'admin' && (
+                  <Link href="/review/queue" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="outline" className="w-full border-[#355443] bg-transparent text-[#DDE9DE]">
+                      Review queue
+                    </Button>
+                  </Link>
+                )}
+                <Button
+                  variant="outline"
+                  className="w-full border-[#355443] bg-transparent text-[#DDE9DE]"
+                  onClick={() => {
+                    setMobileMenuOpen(false)
+                    handleLogout()
+                  }}
+                >
+                  Log out
+                </Button>
+              </>
+            ) : (
+              <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                <Button variant="outline" className="w-full border-[#355443] bg-transparent text-[#DDE9DE]">
+                  Log in
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       )}
