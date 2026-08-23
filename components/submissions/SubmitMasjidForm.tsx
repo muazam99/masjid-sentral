@@ -1,11 +1,12 @@
 "use client";
 
-// Public "submit a new masjid" form — reuses the same sections/schema as the
-// admin CreateMasjidForm (this repo's canonical react-hook-form + zod pattern),
-// since a brand-new masjid submission supports the same full field set
-// (photos, facilities, contacts, sedekah, org contacts). The only difference
-// from CreateMasjidForm is where it posts (a pending review queue, not a live
-// write) and where it sends the user afterwards.
+// "Submit a new masjid" form — used by both regular contributors and admins
+// (rendered directly at /admin/masjid/new too, see that page). Every masjid
+// create/update goes through this same pending-review path; there is no
+// separate direct-write form. Reuses the admin/create-masjid sections/schema
+// (this repo's canonical react-hook-form + zod pattern) since a brand-new
+// masjid submission supports the same full field set (photos, facilities,
+// contacts, sedekah, org contacts).
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -26,7 +27,7 @@ import { ContactInfoSection } from "@/components/admin/create-masjid/sections/Co
 import { SocialMediaSection } from "@/components/admin/create-masjid/sections/SocialMediaSection";
 import { SedekahSection } from "@/components/admin/create-masjid/sections/SedekahSection";
 import { OrganizationContactsSection } from "@/components/admin/create-masjid/sections/OrganizationContactsSection";
-import { buildPayload } from "@/components/admin/create-masjid/CreateMasjidForm";
+import { buildPayload } from "@/components/admin/create-masjid/buildPayload";
 
 const STEPS = [
   { id: "section-basic-information", label: "Basic information" },

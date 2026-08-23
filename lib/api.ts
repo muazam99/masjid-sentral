@@ -396,20 +396,6 @@ export type CreateMasjidPayload = {
   }[];
 };
 
-export async function createMasjid(payload: CreateMasjidPayload): Promise<{ id: number }> {
-  const res = await fetch("/api/admin/masjid", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-
-  const body = (await res.json().catch(() => null)) as { id?: number; error?: string } | null;
-  if (!res.ok || !body?.id) {
-    throw new Error(body?.error || `Failed to create masjid (${res.status})`);
-  }
-  return { id: body.id };
-}
-
 export async function requestImageUploadUrl(): Promise<{ id: string; uploadURL: string }> {
   const res = await fetch("/api/admin/images/upload-url", { method: "POST" });
   const body = (await res.json().catch(() => null)) as
