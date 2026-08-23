@@ -91,6 +91,9 @@ export default function Navbar() {
                 <DropdownMenuItem asChild>
                   <Link href="/submissions/mine">My submissions</Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard/api-keys">Developer Dashboard</Link>
+                </DropdownMenuItem>
                 {user.role === 'admin' && (
                   <DropdownMenuItem asChild>
                     <Link href="/review/queue">Review queue</Link>
@@ -149,6 +152,11 @@ export default function Navbar() {
                 <Link href="/submissions/mine" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" className="w-full border-[#355443] bg-transparent text-[#DDE9DE]">
                     My submissions
+                  </Button>
+                </Link>
+                <Link href="/dashboard/api-keys" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full border-[#355443] bg-transparent text-[#DDE9DE]">
+                    Developer Dashboard
                   </Button>
                 </Link>
                 {user.role === 'admin' && (

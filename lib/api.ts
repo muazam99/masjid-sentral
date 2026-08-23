@@ -533,6 +533,52 @@ export async function rejectSubmission(id: number, reviewNote: string): Promise<
   }
 }
 
+export async function fetchMyApiKeys(): Promise<import("@/types/ApiKey").ApiKey[]> {
+  const res = await fetch("/api/me/api-keys");
+  if (!res.ok) {
+    const body = (await res.json().catch(() => null)) as { error?: string } | null;
+    throw new Error(body?.error || `Failed to load API keys (${res.status})`);
+  }
+  const body = (await res.json()) as { data: import("@/types/ApiKey").ApiKey[] };
+  return body.data ?? [];
+}
+
+export async function createApiKey(name: string): Promise<import("@/types/ApiKey").ApiKey> {
+  const res = await fetch("/api/me/api-keys", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name }),
+  });
+  if (!res.ok) {
+    const body = (await res.json().catch(() => null)) as { error?: string } | null;
+    throw new Error(body?.error || `Failed to create API key (${res.status})`);
+  }
+  return (await res.json()) as import("@/types/ApiKey").ApiKey;
+}
+
+export async function updateApiKey(id: number, updates: { name?: string; is_active?: boolean }): Promise<import("@/types/ApiKey").ApiKey> {
+  const res = await fetch(`/api/me/api-keys/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) {
+    const body = (await res.json().catch(() => null)) as { error?: string } | null;
+    throw new Error(body?.error || `Failed to update API key (${res.status})`);
+  }
+  return (await res.json()) as import("@/types/ApiKey").ApiKey;
+}
+
+export async function revokeApiKey(id: number): Promise<void> {
+  const res = await fetch(`/api/me/api-keys/${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) {
+    const body = (await res.json().catch(() => null)) as { error?: string } | null;
+    throw new Error(body?.error || `Failed to revoke API key (${res.status})`);
+  }
+}
+
 export function formatDistance(km: number): string {
   if (km < 1) {
     return `${Math.round(km * 1000)} m`;
