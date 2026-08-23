@@ -421,13 +421,26 @@ export async function uploadImageFile(file: File): Promise<string> {
   return id;
 }
 
-// ─── Submissions (user-submitted new masjids / edits, pending admin review) ─
+// ─── Submissions (user-submitted new masjids/events / edits, pending admin review) ─
+
+export type CreateEventPayload = {
+  masjid_id: number;
+  title: string;
+  description?: string | null;
+  start_at: string;
+  end_at?: string | null;
+  status?: "active" | "cancelled" | "completed";
+  rrule?: string | null;
+  source_app?: string;
+  source_user_id?: string | null;
+  images?: { path: string; is_thumbnail?: boolean; sort_order?: number }[];
+};
 
 export async function submitMasjidCreate(payload: CreateMasjidPayload): Promise<Submission> {
   const res = await fetch("/api/submissions", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ type: "create", payload }),
+    body: JSON.stringify({ entity_type: "masjid", type: "create", payload }),
   });
   const body = (await res.json().catch(() => null)) as (Submission & { error?: undefined }) | { error?: string } | null;
   if (!res.ok || !body) {
@@ -443,7 +456,7 @@ export async function submitMasjidUpdate(
   const res = await fetch("/api/submissions", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ type: "update", masjid_id: masjidId, payload }),
+    body: JSON.stringify({ entity_type: "masjid", type: "update", masjid_id: masjidId, payload }),
   });
   const body = (await res.json().catch(() => null)) as (Submission & { error?: undefined }) | { error?: string } | null;
   if (!res.ok || !body) {
@@ -452,16 +465,49 @@ export async function submitMasjidUpdate(
   return body as Submission;
 }
 
-export async function fetchMySubmissions(): Promise<Submission[]> {
-  const res = await fetch("/api/submissions");
+export async function submitEventCreate(payload: CreateEventPayload): Promise<Submission> {
+  const res = await fetch("/api/submissions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ entity_type: "event", type: "create", masjid_id: payload.masjid_id, payload }),
+  });
+  const body = (await res.json().catch(() => null)) as (Submission & { error?: undefined }) | { error?: string } | null;
+  if (!res.ok || !body) {
+    throw new Error((body as { error?: string } | null)?.error || `Failed to submit event (${res.status})`);
+  }
+  return body as Submission;
+}
+
+export async function submitEventUpdate(
+  eventId: number,
+  payload: Partial<CreateEventPayload>
+): Promise<Submission> {
+  const res = await fetch("/api/submissions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ entity_type: "event", type: "update", entity_id: eventId, payload }),
+  });
+  const body = (await res.json().catch(() => null)) as (Submission & { error?: undefined }) | { error?: string } | null;
+  if (!res.ok || !body) {
+    throw new Error((body as { error?: string } | null)?.error || `Failed to submit event edit (${res.status})`);
+  }
+  return body as Submission;
+}
+
+export async function fetchMySubmissions(entityType?: string): Promise<Submission[]> {
+  const params = entityType ? `?entity_type=${entityType}` : "";
+  const res = await fetch(`/api/submissions${params}`);
   if (!res.ok) throw new Error(`Failed to load submissions (${res.status})`);
   const body = (await res.json()) as { data: Submission[] };
   return body.data ?? [];
 }
 
-export async function fetchAdminSubmissions(status?: string): Promise<Submission[]> {
-  const params = status ? `?status=${status}` : "";
-  const res = await fetch(`/api/admin/submissions${params}`);
+export async function fetchAdminSubmissions(status?: string, entityType?: string): Promise<Submission[]> {
+  const params = new URLSearchParams();
+  if (status) params.set("status", status);
+  if (entityType && entityType !== "all") params.set("entity_type", entityType);
+  const qs = params.toString() ? `?${params.toString()}` : "";
+  const res = await fetch(`/api/admin/submissions${qs}`);
   if (!res.ok) throw new Error(`Failed to load submissions (${res.status})`);
   const body = (await res.json()) as { data: Submission[] };
   return body.data ?? [];
